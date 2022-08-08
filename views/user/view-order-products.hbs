@@ -1,0 +1,23 @@
+<section class="product ">
+    <div class="row property__gallery">
+        {{#each products.Products}}
+        <div class="col-lg-3 col-md-4 col-sm-6 mix women">
+            <div class="product__item mt-4" >
+                {{!-- <div class="product__item__pic set-bg  img-wrapper">
+                    <img class="inner-img" src="/product-images/{{Product_id.Images.[0].filename}}"
+                            alt="">
+                </div> --}}
+                <img src="/product-images/{{Product_id.Images.[0].filename}}" alt="">
+                <div class="product__item__text">
+                    <h5><a href="#">{{Product_id.ProductName}}</a></h5>
+                      <h5><a href="#">Qnt-{{this.Quantity}}</a></h5>
+                    <div class="product__price mt-1 mb-1">
+                        <h5>₹{{Product_id.Price}}/-</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</section>
+<!-- Product Section End -->

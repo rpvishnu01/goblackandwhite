@@ -1,0 +1,196 @@
+<div class="content-body">
+
+    <div class="container-fluid">
+
+        <div class="row page-titles mx-0">
+            <div class="col-sm-12 p-md-0">
+                <div class="welcome-text">
+                    <h4>Add product</h4>
+                    <span class="ml-1">B and W productd</span>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-body">
+
+
+
+
+                        <form action="/////////////admin/update-products/{{product._id}}" enctype="multipart/form-data" method="post">
+                            <div class="col col-md-6">
+                                <div class=" mb-3">
+                                    <label for="formGroupExampleInput" class="form-label" >Name</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput" name="Name"
+                                        placeholder="enter product name" value="{{product.ProductName}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput2" name="Price"
+                                        placeholder="enter price" value="{{product.Price}}" required>
+                                </div>
+                                  <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Stock</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput2" name="Stock"
+                                        placeholder="enter Stock" value="{{product.Stock}}"  required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">About</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput2" name="About"
+                                        placeholder="About product" style="height: 100px;" value="{{product.About}}" required>
+                                </div>
+                                <div class="mb-3">
+                                            <label for="formGroupExampleInput2" class="form-label">Choose product categorie</label>
+                                    <select name="category" class="form-control">
+                                      
+                                        
+                                          {{#each categories}}
+                                          <option selected {{this.CategoryName}} ></option>
+                                           <option  value="{{this._id}}" >{{this.CategoryName}}</option>
+                                        {{!-- <option  >{{this.CategoryName}}</option> --}}
+                                       {{/each}}
+                                    </select>
+                                     
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+                           <div class="mb-3">
+                                            <label for="formGroupExampleInput2" class="form-label">Choose product size</label>
+                                    <select name="size" class="form-control" required>
+                                      
+                                        <option selected >{{product.Size}} </option >
+                                       
+                                           <option  value="S" >S</option>
+                                            <option  value="M" >M</option>
+                                            <option  value="L" >L</option>
+                                            <option  value="XL" >XL</option>
+
+                                       
+                                     
+                                    </select>
+                                     
+                                </div>
+
+
+                                
+                           <div class="mb-3">
+                                     <label for="formGroupExampleInput2" class="form-label">Choose product color</label>
+                                    <select name="color" class="form-control" required>
+                                      
+                                        <option selected hidden></option>
+                                       
+                                           <option  value="Black" >Black</option>
+                                            <option  value="White" >White</option>
+                                          
+
+                                       
+                                     
+                                    </select>
+                                     
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <img   src="/product-images/{{product.Images.[0].filename}}" style="width: 100px;height:100px ;"
+                                        alt="">
+                                    <label>Add Image1</label>
+                                    <input class="form-control" type="file" name="images" id="formFile" multiple required>
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <img   src="/product-images/{{product.Images.[1].filename}}" style="width: 100px;height:100px ;"
+                                        alt="">
+                                    <label>Add Image1</label>
+                                    <input class="form-control" type="file" name="images" id="formFile" multiple required>
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <img   src="/product-images/{{product.Images.[2].filename}}" style="width: 100px;height:100px ;"
+                                        alt="">
+                                    <label>Add Image1</label>
+                                    <input class="form-control" type="file" name="images" id="formFile" multiple required>
+                                </div>
+
+                                <div class="mb-3">
+
+                                    <img   src="/product-images/{{product.Images.[3].filename}}" style="width: 100px;height:100px ;"
+                                        alt="">
+                                    <label>Add Image1</label>
+                                    <input class="form-control" type="file" name="images" id="formFile" multiple required>
+                                </div>
+
+                                <button type="submit" class="btn btn-success" value="UploadImages ">Add Product</button>
+                            </div>
+                        </form>
+                       
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+{{!-- 
+
+   <form action="/admin/update-products/{{product._id}}" method="POST"
+                            enctype="multipart/form-data">
+                            <div class="col col-md-6">
+                                <div class=" mb-3">
+                                    <label for="formGroupExampleInput" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput" name="Name"
+                                        placeholder="enter product name" value="{{product.ProductName}}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput2" name="Price"
+                                        placeholder="enter price" value="{{product.Price}}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">About</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput2" name="About"
+                                        placeholder="About product" value="{{product.About}}" style="height: 100px;">
+                                </div>
+                                <div class="mb-3">
+                                    <label>Add Image</label>
+                                    <img src="/product-images/{{product._id}}.jpg" style="width: 100px;height:100px ;"
+                                        alt="">
+                                    <input class="form-control" type="file" name="Image">
+                                </div>
+                                <button type="submit" class="btn btn-success">Add Product</button>
+                            </div>
+                        </form> --}}

@@ -1,0 +1,196 @@
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
+                    width="150px"
+                    src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
+                    class="font-weight-bold">{{user.FirstName}} {{user.LastName}}</span><span class="text-black-50">
+                    {{user.Email}}</span><span></span></div>
+
+
+            <div class="profileC">
+                <ul class="profile">
+
+
+
+                    <li><a href="/chat">orders</a> </li>
+                    <li><a href="/chat">chat</a> </li>
+                </ul>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Add Address</h4>
+                </div>
+
+
+
+
+
+
+
+
+
+
+                <form action="" method="post" id="add_address">
+                    <div class="row mt-2">
+                        <div class="col-md-6"><label class="labels">First Name</label>
+                            <input type="text" class="form-control" placeholder="enter First Name" value=""
+                                name="FirstName" id="firstNameInput" required>
+                        </div>
+                        <div class="col-md-6"><label class="labels">Last Name</label>
+                            <input type="text" class="form-control" value="" placeholder="enter Last Name"
+                                name="LastName" id="lastNameInput" required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mt-3">
+                        <div class="col-md-12"><label class="labels">Address</label><input type="text"
+                                class="form-control" placeholder="enter Address" value="" name="Address"
+                                id="addressInput" required></div>
+
+
+
+                        <div class="col-md-12"><label class="labels">Town</label><input type="text" class="form-control"
+                                placeholder="enter Town" value="" name="Town" id="townInput" required></div>
+
+
+
+                        <div class="col-md-12"><label class="labels">State</label><input type="text"
+                                class="form-control" placeholder="enter State" value="" name="State" id="stateInput"
+                                required></div>
+
+
+                        <div class="col-md-12"><label class="labels">Postcode</label><input type="text"
+                                class="form-control" placeholder="enter PostCode" value="" name="Pin" id="pinInput"
+                                required></div>
+
+
+
+                        <div class="col-md-12"><label class="labels">Mob</label><input type="text" class="form-control"
+                                placeholder="enter Mob" value="" name="Mob" id="mobInput" required></div>
+
+
+
+
+
+
+                        <div class="col-md-12"><label class="labels">Email ID</label><input type="text"
+                                class="form-control" placeholder="enter email id" value="" name="Email" id="emailInput"
+                                required></div>
+                        <input type="text" class="form-control" value="" name="addressId" id="hidden" hidden>
+
+
+
+
+                    </div>
+
+                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Save
+                            Profile</button></div>
+
+                </form>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                {{!-- <div class="d-flex justify-content-between align-items-center experience"><span>Edit
+                        Experience</span><span class="border px-3 p-1 add-experience"><i
+                            class="fa fa-plus"></i>&nbsp;Experience</span></div><br> --}}
+
+
+
+                <div class="col-md-12">
+
+
+                    <label class="labels">previously Added Address</label>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Addresses</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each address.AddressList}}
+                            <tr>
+                                <td>
+                                    <p>{{this.FirstName}} {{this.LastName}}, {{this.Address}}, {{this.Town}},
+                                        {{this.State}}, {{this.Pin}}, {{this.Mob}}, {{this.Email}} </p>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-success"
+                                        onclick="updateAddress('{{this.FirstName}}', '{{this.LastName}}', '{{this.Address}}','{{this.Town}}','{{this.State}}','{{this.Pin}}','{{this.Mob}}','{{this.Email}}','{{this._id}}')">Update</button>
+
+
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div> <br>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $("#add_address").submit(() => {
+
+        $.ajax({
+            url: '/add-address',
+            method: 'post',
+            data: $('#add_address').serialize(),
+            success: (response) => {
+                alert(response)
+                location.reload()
+
+            }
+        })
+    });
+
+</script>
+<script>
+    function updateAddress(FirstName, LastName, add, town, state, pin, mob, email, addId) {
+        document.getElementById("firstNameInput").value = FirstName
+        document.getElementById("lastNameInput").value = LastName
+        document.getElementById("addressInput").value = add
+        document.getElementById("townInput").value = town
+        document.getElementById("stateInput").value = state
+        document.getElementById("pinInput").value = pin
+        document.getElementById("mobInput").value = mob
+        document.getElementById("emailInput").value = email
+        document.getElementById("hidden").value = addId
+
+    }
+</script>

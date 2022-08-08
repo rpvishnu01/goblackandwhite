@@ -1,0 +1,38 @@
+{{!-- <div class="con">
+
+ <div class="login-page">
+    
+  <div class="form">
+    <form class="register-form">
+      <input type="text" placeholder="name"/>
+      <input type="password" placeholder="password"/>
+      <input type="text" placeholder="email address"/>
+      <button>create</button>
+      <p class="message">Already registered? <a href="#">Sign In</a></p>
+    </form>
+
+  </div>
+</div>
+
+</div> --}}
+
+
+<div class="con">
+ <div class="login-page">  
+  <div class="form">
+        <h3>SIGNUP</h3>
+    <form class="login-form" action="/signup" method="post">
+      <input type="text" name="FirstName" placeholder="First Name" required/>
+      <input type="text" name="LastName" placeholder="Last Name" required/>
+      <input type="tel" name="MobNo" placeholder="Mobile No" required/>
+       <input type="text" name="Email" placeholder="Email ID"required/>
+      <input type="password" name="Password" placeholder="Password" required/>
+      <button>SignUp</button>
+         {{#if err}}
+      <p class="error text-danger mt-2" >{{err}}</p>
+      {{/if}}
+   <a href="/login">  <p class="message">Already registered? Login</p></a> 
+    </form>
+  </div>
+</div>
+</div>

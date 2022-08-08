@@ -1,0 +1,17 @@
+<div class="con">
+ <div class="login-page"> 
+  <div class="form">
+        <h3>OTP Verification</h3>
+        
+    <form class="login-form" action="/otp-verifier" method="post">
+      <input type="otp" name="Otp" placeholder="Enter Your OTP"/>
+    
+      <button>submit</button>
+      {{#if otpErr}}
+      <p class="error text-danger mt-2" >{{ otpErr}}</p>
+      {{/if}}
+    </form>
+  </div>
+</div>
+</div>
+

@@ -1,0 +1,408 @@
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                    <span>Shopping cart</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h6 class="coupon__link"><span class="icon_tag_alt"></span> <a href="#">Have a coupon?</a> Click
+                    here to enter your code.</h6>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-lg-8">
+                {{#each address.AddressList}}
+                <h6 class="address__link"> {{this.FirstName}} {{this.LastName}}, {{this.Address}}, {{this.Town}},
+                    {{this.State}}, {{this.Pin}}, {{this.Mob}}, {{this.Email}} &nbsp; <button
+                        style="background-color: rgba(255, 255, 255, 0), ;"
+                        onclick="addAddress('{{this.FirstName}}', '{{this.LastName}}', '{{this.Address}}','{{this.Town}}','{{this.State}}','{{this.Pin}}','{{this.Mob}}','{{this.Email}}','{{this._id}}')">+</button>
+                </h6>
+                {{/each}}
+            </div>
+        </div>
+        {{!-- //form start --}}
+
+
+
+
+
+
+        <form action="" class="checkout__form" id="checkout_form">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Billing detail</h5>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>First Name <span>*</span></p>
+                                <input type="text" name="FirstName" id="firstNameInput" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Last Name <span>*</span></p>
+                                <input type="text" name="LastName" id="lastNameInput" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            {{!-- <div class="checkout__form__input">
+                                <p>Country <span>*</span></p>
+                                <input type="text">
+                            </div> --}}
+                            <div class="checkout__form__input">
+                                <p>Address <span>*</span></p>
+                                <input type="text" name="Address" placeholder="Street Address" id="addressInput"
+                                    required>
+
+
+
+
+
+
+
+
+
+
+
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Town/City <span>*</span></p>
+                                <input name="Town" type="text" id="townInput" required>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>State <span>*</span></p>
+                                <input type="text" name="State" id="stateInput" required>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Postcode/Zip <span>*</span></p>
+                                <input type="text" name="Pin" id="pinInput" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Phone <span>*</span></p>
+                                <input type="text" name="Mob" id="mobInput" required>
+                            </div>
+                        </div>
+
+                        <input type="text" name="netTotal" id="" value="{{CartItems.[0].NetTotal}}" hidden>
+
+                        {{!-- {{#if netTotal}}
+
+                        <input type="text" name="netTotal" id="" value="{{netTotal}}" hidden>
+                        {{else}}
+
+                        <input type="text" name="totall" id="" value="{{total}}" hidden>
+                        {{/if}} --}}
+
+
+
+
+
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Email <span>*</span></p>
+                                <input type="text" name="Email" id="emailInput" required>
+
+                                <input type="text" name="userId" value="{{user._id}}" hidden>
+                                <input type="text" name="addressId" value="" id="hidden" hidden>
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-4">
+                    <div class="checkout__order">
+                        <h5>Your order</h5>
+                        <div class="checkout__order__product">
+                            <ul>
+                                <li>
+                                    <span class="top__text">Product</span>
+
+                                    <span class="top__text__right">Total</span>
+                                    {{!-- {{countCart}} --}}
+                                </li>
+                                {{#each CartItems}}
+                                <li>{{this.CartProducts.ProductName}} ( {{this.Quantity}} x {{this.Price}} )
+                                    <span>{{this.totalPrice}}</span>
+                                </li>
+
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="checkout__order__total">
+                            <ul>
+
+                                <li>Discount <span>{{CartItems.[0].discoundedAmt}}</span></li>
+                                <li>Total <span>{{CartItems.[0].NetTotal}}</span></li>
+                                {{!-- {{#if savedMoney}}
+                                <li>Discount <span>{{savedMoney}}</span></li>
+                                {{else}}
+                                <li>Discount <span>0</span></li>
+                                {{/if}}
+
+
+                                {{#if netTotal}}
+                                <li>Total <span>{{netTotal}}</span></li>
+                                {{else}}
+                                <li>Total <span>{{total}}</span></li>
+                                {{/if}} --}}
+
+
+
+                            </ul>
+                        </div>
+                        <div class="checkout__order__widget">
+                            <h5>PAYMENT METHOD</h5>
+
+                            <input type="radio" name='payment-method' value="COD"
+                                style="height:20px; width:20px; vertical-align: middle;" required> &nbsp;cash on
+                            delivery<br><br>
+
+                            <input type="radio" name='payment-method' value="ONLINE"
+                                style="height:20px; width:20px; vertical-align: middle;" required> &nbsp;Online payment
+                            <br><br>
+                        </div>
+                        <button type="submit" class="site-btn">Place oder</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+
+
+
+
+
+    </div>
+</section>
+<!-- Checkout Section End -->
+
+
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-7">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                        cilisis.</p>
+                    <div class="footer__payment">
+                        <a href="#"><img src="img/payment/payment-1.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-2.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-3.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-4.png" alt=""></a>
+                        <a href="#"><img src="img/payment/payment-5.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-5">
+                <div class="footer__widget">
+                    <h6>Quick links</h6>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blogs</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <div class="footer__widget">
+                    <h6>Account</h6>
+                    <ul>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Orders Tracking</a></li>
+                        <li><a href="#">Checkout</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-8 col-sm-8">
+                <div class="footer__newslatter">
+                    <h6>NEWSLETTER</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Email">
+                        <button type="submit" class="site-btn">Subscribe</button>
+                    </form>
+                    <div class="footer__social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                <div class="footer__copyright__text">
+                    <p>Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | This template
+                        is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
+                            target="_blank">Colorlib</a>
+                    </p>
+                </div>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+<!-- Search Begin -->
+<div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $("#checkout_form").submit((e) => {
+        e.preventDefault()
+
+
+        swal({
+            title: "payment conformation",
+            text: "Are you sure ",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                        url: '/checkout',
+                        method: 'post',
+                        data: $('#checkout_form').serialize(),
+                        success: (response) => {
+                            if (response.cod_success) {
+                               
+                                console.log("am cod======================")
+                                location.href = '/order-placed'
+                            } else {
+                                console.log("am online++++++++++++++++++++++++++++++++++++++++++")
+                                razorpayPayment(response)
+                            }
+                        }
+                    })
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
+
+
+
+
+
+    });
+
+
+
+
+
+    function razorpayPayment(order) {
+        console.log(order)
+        var options = {
+            "key": "rzp_test_ZGCtHKXDjq0T1E", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Black & White",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "vishnu rp",
+                "email": "rpvishnu46@gmail.com",
+                "contact": "9946279434"
+            },
+            "notes": {
+                "address": "Black&White pvt.ltd"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+
+    function verifyPayment(payment, order) {
+
+        $.ajax({
+            url: '/verify-payment',
+            data: {
+                payment, order
+            },
+            method: "post",
+            success: (response) => {
+                if (response.status) {
+                    location.href = '/order-placed'
+                } else {
+                    alert("payment failed")
+                }
+
+            }
+        })
+    }
+</script>
+
+
+
+<script>
+    function addAddress(FirstName, LastName, add, town, state, pin, mob, email, addId) {
+        document.getElementById("firstNameInput").value = FirstName
+        document.getElementById("lastNameInput").value = LastName
+        document.getElementById("addressInput").value = add
+        document.getElementById("townInput").value = town
+        document.getElementById("stateInput").value = state
+        document.getElementById("pinInput").value = pin
+        document.getElementById("mobInput").value = mob
+        document.getElementById("emailInput").value = email
+        document.getElementById("hidden").value = addId
+        document.getElementById("hidden").value = addId
+
+    }
+</script>

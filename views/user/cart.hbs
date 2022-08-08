@@ -1,0 +1,357 @@
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                    <span>Shopping cart</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Shop Cart Section Begin -->
+<section class="shop-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop__cart__table">
+
+
+
+
+
+                    <table>
+                        <thead>
+
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+
+                                <th>Quantity</th>
+                                <th>Remove</th>
+                                {{!-- <th>Total</th> --}}
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each CartItems}}
+                            <tr>
+                                <td class="cart__product__item">
+                                    <img src="/product-images/{{this.CartProducts.Images.[0].filename}}" alt=""
+                                        style="width:100px ;height:100px">
+                                    <div class="cart__product__item__title">
+                                        <h6> {{this.CartProducts.ProductName}}</h6>
+                                        <p>{{this.CartProducts.About}}</p>
+                                        {{!-- {{#if Product_id.Stock }}
+                                        <p class="text-danger"> OUT OF STOKE</p>
+                                        {{/if}} --}}
+
+                                        <div class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">{{this.totalPrice}}</td>
+                                <td class="cart__price">
+                                    {{!-- <div class="pro-qty">
+                                        <input type="text" value="1">
+                                    </div> --}}
+
+
+                                    {{!-- <button type="button" class="btn btn-default btn-circle mr-2"
+                                        onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',-1)">-</button>
+                                    {{this.Quantity}}
+
+
+
+                                    <button type="button" class="btn btn-default btn-circle ml-2"
+                                        onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',1)">+</button>
+                                    --}}
+
+
+
+                                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                                            <button type="button" class="btn btn-secondary"
+                                                onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',-1)">-</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',1)">+</button>
+                                            <h4>&nbsp;&nbsp; {{this.Quantity}}</h4>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+
+                                {{!-- <td class="cart__total">$ {{this.total}} </td> --}}
+
+                                <td>
+
+                                    <button class="btn btn-default btn-circle ml-2"
+                                        onclick="removeProductFromCart('{{this.CartProducts._id}}')">x</button>
+
+
+
+                                </td>
+                            </tr>
+                            {{/each}}
+
+
+                        </tbody>
+                    </table>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+       
+            <div class="row">
+
+
+
+
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="discount__content">
+                        <h6>Discount codes</h6>
+                        <form action="" method="post" id="appycoupon">
+                            <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
+                                name="CoupenCode" id="couponC" required>
+                            <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
+                                name="total" value="{{total}}" hidden required> <br>
+                            <p class="text-success" id="scsmessage"></p>
+                            <button type="submit" class="site-btn">Apply</button>
+
+
+
+                        </form>
+                        {{#if Coupon}}
+                        {{#each Coupon}}
+                        <div class="coupon" id="maincontent"></div>
+                        <p><br /> Take {{this.couponValue}} off
+                            On your first Order use code
+                            <button class="coup" id="copy"
+                                onclick="getCoup('{{this.couponCode}}')">{{this.couponCode}}</button> at
+                            checkout.
+                        </p>
+                        {{/each}}
+                        {{!-- <input id="cleared"></input> --}}
+
+                        {{else}}
+                        <p class="text-danger">No Applicable coupons ...</p>
+                        {{/if}}
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="col-lg-6">
+                    <div class="cart__total__procced">
+                        <h6>Cart total</h6>
+                        <ul>
+                            {{#each CartItems}}
+                            <li>{{this.CartProducts.ProductName}} ( {{this.Quantity}} x {{this.Price}} )
+                                <span>{{this.totalPrice}}</span>
+                            </li>
+
+                            {{/each}}
+
+                            <li>Subtotal <span>{{total}}</span></li>
+
+                            <li>Discount <span id="discound">0</span></li>
+                            <li>Total <span id="totalAmt">{{total}}</span></li>
+                        </ul>
+                        <a href="/checkout" class="primary-btn">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+</section>
+<!-- Shop Cart Section End -->
+
+
+
+
+
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    function changeQuantity(cartid, proId, Quantity, Price, count) {
+
+
+        if (count == -1 && Quantity == 1) {
+            new swal({
+                title: "product removed",
+                text: "product removed from your cart",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+
+                        $.ajax({
+                            url: '/change-product-quantity',
+                            data: {
+                                cartid: cartid,
+                                product: proId,
+                                Quantity: Quantity,
+                                totalPrice: Price,
+                                count: count,
+                            }, method: 'post',
+                            success: (response) => {
+                                console.log(response)
+                                if (response.removeProduct) {
+                                    alert("product removed")
+                                    location.reload();
+                                } else {
+
+                                    location.reload();
+                                }
+                            }
+                        })
+                    } else {
+                        new swal("Your imaginary file is safe!");
+                    }
+                });
+
+
+
+
+
+
+        } else {
+
+
+            $.ajax({
+
+                url: '/change-product-quantity',
+                data: {
+                    cartid: cartid,
+                    product: proId,
+                    Quantity: Quantity,
+                    totalPrice: Price,
+                    count: count,
+                }, method: 'post',
+                success: (response) => {
+                    console.log(response)
+                    if (response.removeProduct) {
+                        alert("product removed")
+                        location.reload();
+                    } else {
+
+                        location.reload();
+                    }
+
+                }
+            })
+        }
+
+
+    } 
+</script>
+
+
+<script>
+    function removeProductFromCart(proId) {
+        $.ajax({
+            url: '/removeCart',
+            data: {
+
+                proId: proId
+            }, method: 'post',
+            success: (response) => {
+                alert("product removed from cart")
+                location.reload();
+
+            }
+        })
+    }
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+    $("#appycoupon").submit((e) => {
+
+        e.preventDefault()
+
+        $.ajax({
+            url: '/apply-coupon',
+            method: 'post',
+            data: $('#appycoupon').serialize(),
+            success: (response) => {
+                if (response.couponApplied) {
+                    document.getElementById("totalAmt").innerHTML = response.netAmount
+                    document.getElementById("discound").innerHTML = response.savedMoney
+                    document.getElementById("scsmessage").innerHTML = "Coupon Added Successfully You Saved " + response.savedMoney + "rs"
+
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Coupon Added successfully'
+                    })
+
+                }
+
+            }
+        })
+    });
+
+</script>
+
+
+<script>
+    function getCoup(couponCode) {
+
+        document.getElementById("couponC").value = couponCode
+
+    }
+</script>

@@ -1,0 +1,262 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+
+
+<!--**********************************
+            Content body start
+        ***********************************-->
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="stat-widget-two card-body">
+                        <div class="stat-content">
+                            <div class="stat-text">Today Revenue </div>
+                            <div class="stat-digit"> <i class="fa-solid fa-indian-rupee-sign"></i>{{totalRevenue}}</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success w-85" role="progressbar" aria-valuenow="85"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="stat-widget-two card-body">
+                        <div class="stat-content">
+                            <div class="stat-text">Total Sale</div>
+                            <div class="stat-digit">{{totalSale}}</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-primary w-75" role="progressbar" aria-valuenow="78"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="stat-widget-two card-body">
+                        <div class="stat-content">
+                            <div class="stat-text">Total Product Count</div>
+                            <div class="stat-digit"> {{productsCount}}</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="stat-widget-two card-body">
+                        <div class="stat-content">
+                            <div class="stat-text">Total users</div>
+                            <div class="stat-digit">{{usersCount}}</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-danger w-65" role="progressbar" aria-valuenow="65"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /# card -->
+            </div>
+            <!-- /# column -->
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="row">
+
+
+            <div class="col-xl-8 col-lg-8 col-md-8">
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Sales Overview</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-8">
+                                <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+            <div class="col-xl-4 col-lg-4 col-md-4">
+
+
+                {{!-- <div class="card">
+                    <div class="card-body text-center">
+                        <div class="m-t-10">
+                            <h4 class="card-title">Customer Feedback</h4>
+                            <h2 class="mt-3">385749</h2>
+                        </div>
+                        <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
+                            <i class="ti-control-shuffle pa"></i>
+                        </div>
+                        <ul class="widget-line-list m-b-15">
+                            <li class="border-right">92% <br><span class="text-success"><i class="ti-hand-point-up"></i>
+                                    Positive</span></li>
+                            <li>8% <br><span class="text-danger"><i class="ti-hand-point-down"></i>Negative</span></li>
+                        </ul>
+                    </div>
+                </div> --}}
+
+            </div>
+        </div>
+
+
+        {{!-- baaaar --}}
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Sales Overview</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-8">
+                                <canvas id="myChart2" style="width:100%;max-width:600px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- baaaar --}}
+
+
+            {{!-- piiiii --}}
+
+            <div class="col-xl-4 col-lg-4 col-md-4">
+                {{!-- <div class="card">
+                    <div class="card-body text-center">
+                        <div class="m-t-10">
+                            <h4 class="card-title">Customer Feedback</h4>
+                            <h2 class="mt-3">385749</h2>
+                        </div>
+                        <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
+                            <i class="ti-control-shuffle pa"></i>
+                        </div>
+                        <ul class="widget-line-list m-b-15">
+                            <li class="border-right">92% <br><span class="text-success"><i class="ti-hand-point-up"></i>
+                                    Positive</span></li>
+                            <li>8% <br><span class="text-danger"><i class="ti-hand-point-down"></i>Negative</span></li>
+                        </ul>
+                    </div>
+                </div> --}}
+
+            </div>
+        </div>
+
+
+        {{!-- piiiii --}}
+    </div>
+</div>
+<!--**********************************
+            Content body end
+        ***********************************-->
+
+
+<!--**********************************
+            Footer start
+        ***********************************-->
+<div class="footer">
+    <div class="copyright">
+        <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+        <p>Distributed by <a href="https://themewagon.com/" target="_blank">Themewagon</a></p>
+    </div>
+</div>
+<!--**********************************
+            Footer end
+        ***********************************-->
+
+<!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+<!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+</div>
+<!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+
+
+<script>
+    var xValues = ["Placed", "Shipped", "Deliverd", "Cancelled"];
+    var yValues = [{{statusData}}];
+    var barColors = ["red", "green", "blue", "orange", "brown"];
+
+    new Chart("myChart", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: "Total product sale Status"
+            }
+        }
+    });
+</script>
+
+
+
+<script>
+    var xValues = ["Cash on  Delivery", "Online Payment", ];
+    var yValues = [{{paymentData}}];
+    var barColors = [
+        " #0000FF",
+        "#ff0000",
+
+    ];
+
+    new Chart("myChart2", {
+        type: "doughnut",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "World Wide Wine Production 2018"
+            }
+        }
+    });
+</script>
