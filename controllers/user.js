@@ -87,10 +87,13 @@ module.exports = {
                 res.redirect('/signup')
             } else {
                 const newUser = response.newUser
-                req.session.otp = newUser.otp
+                // req.session.otp = newUser.otp
                 req.session.userData = newUser
-                req.session.count = 1
-                res.redirect('/otp-verifier')
+                // req.session.count = 1
+                // res.redirect('/otp-verifier')
+                req.session.user =response
+                req.session.loggedIn = true
+                 res.redirect('/')
             }
         } catch (err) {
             console.log(err);

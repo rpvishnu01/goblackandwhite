@@ -6,9 +6,9 @@ const wishlistDb = require('../models/wishlist')
 const orderDb = require('../models/Order')
 const addressDb = require('../models/Address')
 const couponDb = require('../models/Coupon')
-require ('dotenv').config()
+require('dotenv').config()
 const bcrypt = require('bcrypt')
-var nodemailer = require("nodeMailer");
+var nodemailer = require("nodemailer");
 const { default: mongoose } = require('mongoose')
 const trim = require('moment')
 
@@ -34,51 +34,63 @@ module.exports = {
                 response.message = "Email id or Mobile number is already used please login"
                 resolve(response)
             } else {
+                // userData.Password = await bcrypt.hash(userData.Password, 10)
+                // const otpMaker = Math.floor(1000 + Math.random() * 9000);
+                // console.log("==============================================")
+                // console.log(otpMaker)
+                // const newUser = {
+                //     FirstName: userData.FirstName,
+                //     LastName: userData.LastName,
+                //     MobNo: userData.MobNo,
+                //     Email: userData.Email,
+                //     Password: userData.Password,
+                //     otp: otpMaker
+                // }
+                // if (newUser) {
+                //     console.log(userData.Email);
+                //     try {
+
+                //         const transporter = nodemailer.createTransport({
+                //             service: "hotmail",
+                //             auth: {
+                //                 user: process.env.NODEMAILER_EMAIL,
+                //                 pass: process.env.NODEMAILER_PASS
+                //             }
+                //         });
+
+                //         const options = {
+
+                //             from: "blackandwhiteshopping@outlook.com",
+                //             to: userData.Email,
+                //             subject: "Black and White Shopping",
+                //             text: "just random texts ",
+                //             html: "<p>hi " + userData.FirstName + "   your otp is " + otpMaker + "",
+                //         }
+                //         transporter.sendMail(options, function (err, info) {
+                //             if (err) {
+                //                 console.log(err)
+                //                 return
+                //             }
+                //             console.log("Sent :" + info.response);
+                //         })
+                //     } catch (err) {
+                //         console.log(err);
+                //     }
+                // }
+                // response.status = false
+                // response.newUser = newUser
+                // resolve(response)
                 userData.Password = await bcrypt.hash(userData.Password, 10)
-                const otpMaker = Math.floor(1000 + Math.random() * 9000);
-                console.log("==============================================")
-                console.log(otpMaker)
-                const newUser = {
+                const response = new userDb({
                     FirstName: userData.FirstName,
                     LastName: userData.LastName,
-                    MobNo: userData.MobNo,
                     Email: userData.Email,
                     Password: userData.Password,
-                    otp: otpMaker
-                }
-                if (newUser) {
-                    console.log(userData.Email);
-                    try {
-
-                        const transporter = nodemailer.createTransport({
-                            service: "hotmail",
-                            auth: {
-                                user: process.env.NODEMAILER_EMAIL,
-                                pass: process.env.NODEMAILER_PASS
-                            }
-                        });
-
-                        const options = {
-
-                            from: "blackandwhiteshopping@outlook.com",
-                            to: userData.Email,
-                            subject: "Black and White Shopping",
-                            text: "just random texts ",
-                            html: "<p>hi " + userData.FirstName + "   your otp is " + otpMaker + "",
-                        }
-                        transporter.sendMail(options, function (err, info) {
-                            if (err) {
-                                console.log(err)
-                                return
-                            }
-                            console.log("Sent :" + info.response);
-                        })
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }
+                    MobNo: userData.MobNo,
+                })
                 response.status = false
-                response.newUser = newUser
+                response.newUser = response
+                await response.save()
                 resolve(response)
             }
         })
@@ -230,9 +242,9 @@ module.exports = {
                         Item: "$CartItems.Product_id",
                         Quantity: "$CartItems.Quantity",
                         Price: "$CartItems.Price",
-                        NetTotal:"$NetTotal",
-                        discoundedAmt:'$discoundedAmt'
-                        
+                        NetTotal: "$NetTotal",
+                        discoundedAmt: '$discoundedAmt'
+
                     },
                 },
 
@@ -250,8 +262,8 @@ module.exports = {
                         Quantity: 1,
                         Price: 1,
                         CartProducts: { $arrayElemAt: ["$CartProducts", 0] },
-                        NetTotal:1,
-                        discoundedAmt:1
+                        NetTotal: 1,
+                        discoundedAmt: 1
 
                     },
                 },
@@ -853,7 +865,7 @@ module.exports = {
                         await cartDb.updateOne(
                             { UserId: mongoose.Types.ObjectId(userId) },
                             {
-                                $set: { NetTotal:response.netAmount,discoundedAmt:response.savedMoney}
+                                $set: { NetTotal: response.netAmount, discoundedAmt: response.savedMoney }
                             }
                         )
 
