@@ -171,17 +171,6 @@ module.exports = {
         })
     },
 
-
-
-
-
-
-
-
-
-
-
-
     addtoCart: (productId, userId) => {
         return new Promise(async (resolve, reject) => {
             const userCart = await cartDb.findOne({ UserId: userId })
@@ -289,6 +278,21 @@ module.exports = {
                     count = cart.CartItems.length
                 }
                 resolve(count)
+            } catch (err) {
+                reject(err)
+            }
+        })
+    },
+
+    getWishlistCount: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let Wishlistcount = 0
+                const wishlist = await wishlistDb.findOne({ UserId: userId }).populate('WishlistItems.Product_id').lean()
+                if (wishlist) {
+                    Wishlistcount = wishlist.WishlistItems.length
+                }
+                resolve(Wishlistcount)
             } catch (err) {
                 reject(err)
             }
@@ -533,18 +537,8 @@ module.exports = {
                     },
                 },
             ]).exec()
-
-
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-            console.log(prods);
-            console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-
-
             let dateIso = new Date()
             let date = trim(dateIso).format("YYYY-MM-DD")
-
-
-
             const orderObj = new orderDb({
                 UserId: mongoose.Types.ObjectId(orderDetails.userId),
                 Total: total,
@@ -774,11 +768,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 const Order = await orderDb.findOne({ UserId: mongoose.Types.ObjectId(userId) }).lean()
-
-
                 let coupons = [];
-
-
                 if (!Order) {
                     const firstOrderCoupon = await couponDb.findOne({ couponCode: 'FSt01' }).lean()
                     if (firstOrderCoupon) {
@@ -793,11 +783,7 @@ module.exports = {
                     const couponsAboveFiveThousand = await couponDb.find({ minValue: { $lte: total }, couponCode: { $ne: 'FSt01' } }).lean()
                     coupons = [...coupons, ...couponsAboveFiveThousand];
                 }
-
                 resolve(coupons)
-
-
-
             } catch (err) {
                 console.log(err);
             }
@@ -812,16 +798,12 @@ module.exports = {
         let date = trim(dateIso).format("YYYY-MM-DD")
         let response = {}
         return new Promise(async (resolve, reject) => {
-
-
             let userEligibility = await couponDb.aggregate([
                 { $match: { couponCode: coupon } },
                 { $unwind: "$users" },
                 { $match: { 'users.userId': mongoose.Types.ObjectId(userId) } }
             ]).exec()
             console.log(userEligibility.length)
-
-
             if (userEligibility.length == 0) {
                 console.log("1qqqqqqqqq");
                 const values = await couponDb.aggregate([
@@ -839,10 +821,6 @@ module.exports = {
                         }
                     }
                 ]).exec()
-
-                console.log("qqqqqqqqqqqqqqqqqqqqq");
-                console.log(values)
-                console.log("qqqqqqqqqqqqqqqqqqqqq");
                 let couponDiscount = values[0].couponValue
                 let minPurchase = values[0].minValue
                 let couponExpire = values[0].couponValidTo
@@ -861,16 +839,12 @@ module.exports = {
                         //     }
                         // })
 
-
                         await cartDb.updateOne(
                             { UserId: mongoose.Types.ObjectId(userId) },
                             {
                                 $set: { NetTotal: response.netAmount, discoundedAmt: response.savedMoney }
                             }
                         )
-
-
-
                     } else {
                         console.log('coupon is expired')
                         response.couponexpired = true
@@ -888,8 +862,6 @@ module.exports = {
                 response.couponinvalid = true
                 res(response)
             }
-
-
         })
     },
     OrderProduct: (user, prodId, orderId) => {
@@ -929,15 +901,9 @@ module.exports = {
 
 
                 ]).exec()
-
-
-
                 //    {  "Products.Product_id":mongoose.Types.ObjectId(prodId) },
                 //    {_id: 0,Products: {$elemMatch: {Product_id:mongoose.Types.ObjectId(prodId) }}}
                 //    {_id: mongoose.Types.ObjectId(orderId),"Products.$.Product_id": mongoose.Types.ObjectId(prodId) },
-
-
-
                 resolve(product)
             } catch (err) {
                 reject(err)
@@ -949,9 +915,3 @@ module.exports = {
 
 
 }
-
-
-
-// 62c2ab4b30f66bc11e3ec1c6
-
-// 62cd103e77c8f5b743ba31c5

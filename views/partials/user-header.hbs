@@ -8,21 +8,49 @@
     <div class="offcanvas__close">+</div>
     <ul class="offcanvas__widget">
         <li><span class="icon_search search-switch"></span></li>
-        <li><a href="#"><span class="icon_heart_alt"></span>
-                <div class="tip">2</div>
+        <li><a href="/wishlist"><span class="icon_heart_alt"></span>
+
             </a></li>
-        <li><a href="#"><span class="icon_bag_alt"></span>
-                <div class="tip">2</div>
+        <li><a href="/cart"><span class="icon_bag_alt"></span>
+                {{#if user}}
+                <div class="tip"><span class="badge" id="cart-count">{{countCart}}</span></div> {{/if}}
             </a></li>
     </ul>
-    <div class="offcanvas__logo">
-        <a href="/login-page"><img src="/user/img/logo.png" alt=""></a>
+    <div class="offcanvas__logo header__logo">
+        <a href="#"><img src="/user/img/logo2.png" alt=""></a>
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__auth">
-        <a href="/login-page">
-            <p>LOGIN</p>
-        </a>
+
+        {{!-- <ul>
+            {{#if user}}
+            <li><a href="#">{{user.FirstName}}</a> </li>
+            <ul>
+                <li><a href="/account">Account Settings</a></li>
+                <li><a href="/order-details">Orders</a></li>
+
+                <li><a href="/logout">Logout</a></li>
+                {{else}}
+                <li> <a href="/login">Login</a>
+            </ul>
+
+            {{/if}}
+        </ul> --}}
+
+
+
+        <ul class="list-group">
+            {{#if user}}
+            <li class="list-group-item"><a href="/account">{{user.FirstName}}</a> </li>
+            <li class="list-group-item"><a href="/account">Account Settings</a></li>
+            <li class="list-group-item"><a href="/order-details">Orders</a></li>
+            <li class="list-group-item"><a href="/logout">Logout</a></li>
+            {{else}}
+            <li class="list-group-item">Vestibulum at eros</li>
+            {{/if}}
+        </ul>
+
+
 
     </div>
 </div>
@@ -59,8 +87,8 @@
 
                         {{!-- <li><a href="#">Men’s</a></li> --}}
                         <li><a href="/shop">Shop</a></li>
-                       
-                       
+
+
                         <li><a href="/cart">Cart</a></li>
                     </ul>
                 </nav>
@@ -88,7 +116,9 @@
                     <ul class="header__right__widget">
                         <li><span class="icon_search search-switch"></span></li>
                         <li><a href="/wishlist"><span class="icon_heart_alt"></span>
-
+                                {{#if user}}
+                                <div class="tip"><span class="badge" id="cart-count">{{countWishlist}}</span></div>
+                                {{/if}}
                             </a></li>
                         <li><a href="/cart"><span class="icon_bag_alt"></span>
                                 {{#if user}}

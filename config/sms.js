@@ -1,43 +1,5 @@
-// const nodemailer = require('nodemailer')
 
 const { resolveContent } = require('nodemailer/lib/shared');
-
-
-
-
-
-// const transporter = nodemailer.createTransport({
-//     service: "hotmail",
-//     auth: {
-//         user: "blackandwhiteshopping@outlook.com",
-//         pass: "BlackAndWhite"
-//     }
-// });
-
-// const options = {
-
-//     from: "blackandwhiteshopping@outlook.com",
-//     to: "rpvishnu44@gmail.com",
-//     subject: "Hospital Rgistratoin",
-//     text: "just random texts ",
-//     html: "<p>hi " + userData.FirstName + "   your otp  " + otpMaker + "",
-// }
-
-// module.exports = {
-//     doEmail: () => {
-//         transporter.sendMail(options, function (err, info) {
-//             if (err) {
-//                 console.log(err)
-//                 return
-//             }
-//             console.log("Sent :" + info.response);
-//         })
-//     },
-// }
-
-
-
-
 require('dotenv').config() 
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -74,14 +36,6 @@ module.exports={
 
         
     }
-
-
-
-
-        
-
-  
-  
 
 }
 

@@ -7,6 +7,8 @@ const sms = require('../config/sms');
 const category = require('../models/category');
 
 let pr;
+let countWishlist=null
+
 
 
 module.exports = {
@@ -16,10 +18,9 @@ module.exports = {
             const user = req.session.user
             let countCart = null
             // const [products,countCart]=await Promise.all([adminHelpers.getProducts(),userHelpers.getcartCount(user._id)])
-
-
             if (req.session.user) {
                 countCart = await userHelpers.getcartCount(user._id)
+                countWishlist = await userHelpers.getWishlistCount(user._id)
                 req.session.countCart
             }
             const products = await adminHelpers.getProducts()
@@ -32,7 +33,7 @@ module.exports = {
                     products[i].Stock = false
                 }
             }
-            res.render('user/index', { user, products, countCart });
+            res.render('user/index', { user, products, countCart, countWishlist });
         } catch (err) {
             console.log(err);
             next(err)
@@ -91,9 +92,9 @@ module.exports = {
                 req.session.userData = newUser
                 // req.session.count = 1
                 // res.redirect('/otp-verifier')
-                req.session.user =response
+                req.session.user = response
                 req.session.loggedIn = true
-                 res.redirect('/')
+                res.redirect('/')
             }
         } catch (err) {
             console.log(err);
@@ -161,6 +162,11 @@ module.exports = {
             const user = req.session.user
             const CartItems = await userHelpers.getCartData(userId)
             const countCart = await userHelpers.getcartCount(userId)
+         countWishlist = await userHelpers.getWishlistCount(userId)
+
+            console.log("ppppppp");
+            console.log(CartItems);
+            console.log("ppppppp");
 
             if (countCart === 0) {
                 const page = 'noCart'
@@ -178,7 +184,7 @@ module.exports = {
 
                 const total = await userHelpers.CartTotal(userId)
                 const Coupon = await userHelpers.CouponCode(user._id, total)
-                res.render('user/cart', { admin: false, CartItems, user, countCart, total, Coupon })
+                res.render('user/cart', { admin: false, CartItems, user, countCart, countWishlist, total, Coupon })
             }
 
         } catch (err) {
@@ -248,11 +254,12 @@ module.exports = {
 
             product = await adminHelpers.getOneProduct(productId)
             countCart = await userHelpers.getcartCount(user._id)
+            countWishlist = await userHelpers.getWishlistCount(user._id)
         } catch (err) {
             console.log(err);
             next(err)
         }
-        res.render('user/product-details', { admin: false, product, user, countCart })
+        res.render('user/product-details', { admin: false, product, user, countCart, countWishlist })
     },
     getAddtowishList: async (req, res, next) => {
         try {
@@ -281,13 +288,14 @@ module.exports = {
         try {
 
             countCart = await userHelpers.getcartCount(user._id)
+            countWishlist = await userHelpers.getWishlistCount(user._id)
             wishlistItems = await userHelpers.getWishlistData(user._id)
 
         } catch (err) {
             console.log(err);
             next(err)
         }
-        res.render('user/wishlist', { admin: false, wishlistItems, countCart, user })
+        res.render('user/wishlist', { admin: false, wishlistItems, countWishlist, countCart, user })
     },
 
 
@@ -356,14 +364,15 @@ module.exports = {
         try {
             const user = req.session.user
             const countCart = await userHelpers.getcartCount(user._id)
+            countWishlist = await userHelpers.getWishlistCount(user._id)
             const category = await adminHelpers.getCategories()
             if (pr.length === 0) {
 
                 const Empty = true
-                res.render('user/shop', { admin: false, user, Empty, category, countCart });
+                res.render('user/shop', { admin: false, user, Empty, category, countCart,countWishlist });
             } else {
 
-                res.render('user/shop', { admin: false, user, pr, category, countCart });
+                res.render('user/shop', { admin: false, user, pr, category, countCart,countWishlist });
 
             }
         } catch (err) {
@@ -374,28 +383,19 @@ module.exports = {
 
     getCheckout: async (req, res, next) => {
         try {
-            console.log("first++++++++++++++");
             const user = req.session.user
             // const total = await userHelpers.CartTotal(user._id)
             const CartItems = await userHelpers.getCartData(user._id)
-            console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkklll");
-            console.log(CartItems);
-            console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkklll");
-
-
             const countCart = await userHelpers.getcartCount(user._id)
+            countWishlist = await userHelpers.getWishlistCount(user._id)
             const address = await userHelpers.getAddress(user._id)
-
-
-
-            res.render('user/checkout', { admin: false, CartItems, user, address, countCart })
+            res.render('user/checkout', { admin: false, CartItems, user, address, countCart,countWishlist })
         } catch (err) {
             console.log(err);
             next(err)
         }
     },
     postPlaceOrder: async (req, res, next) => {
-        console.log("second++++++++++++++++++++++++=====================================================");
         try {
             const user = req.session.user
             // const total = await userHelpers.CartTotal(user._id)
@@ -431,9 +431,6 @@ module.exports = {
         try {
             const user = req.session.user
             const orders = await userHelpers.OrderDetails(user._id)
-            console.log("=========================8888")
-            console.log(orders);
-            console.log('==========================888');
             res.render('user/order-details', { admin: false, user, orders })
         } catch (err) {
             console.log(err);
@@ -449,13 +446,6 @@ module.exports = {
 
     // },
     postVerifyPayment: (req, res, next) => {
-
-        console.log("pppppppppppppppppppppp");
-        console.log(req.body);
-        console.log("pppppppppppppppppppppp");
-        console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-        console.log(req.body['order[receipt]'])
-        console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
         userHelpers.VerifyPayment(req.body).then(() => {
             userHelpers.changePaymentStatus(req.body['order[receipt]']).then(() => {
                 console.log("payment successfull");
@@ -471,10 +461,6 @@ module.exports = {
     postRemoveOrder: async (req, res, next) => {
         try {
             const user = req.session.user
-            console.log('PPPPPPPPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
-            console.log(req.body)
-            console.log('PPPPPPPPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
-
             const responce = await userHelpers.removeOrder(req.body)
             res.redirect('/order-details')
         } catch (err) {
@@ -489,7 +475,7 @@ module.exports = {
 
             const address = await userHelpers.getAddress(user._id)
             const countCart = await userHelpers.getcartCount(user._id)
-
+            countWishlist = await userHelpers.getWishlistCount(user._id)
             //   if(address){
             //     console.log("!!!!222222222222222222222");
             //     console.log(address);
@@ -498,7 +484,7 @@ module.exports = {
             //     res.render('user/profile', { admin: false,user,addreslist:address})
             //   }
             console.log(address);
-            res.render('user/profile', { admin: false, user, address, countCart })
+            res.render('user/profile', { admin: false, user, address, countCart ,countWishlist})
 
         }
         catch (err) {
@@ -521,10 +507,6 @@ module.exports = {
 
         }
     },
-
-
-
-
     postApplayCoupon: async (req, res, next) => {
         try {
             // console.log("basim");
@@ -542,18 +524,11 @@ module.exports = {
     },
     getTrackOrder: async (req, res, next) => {
         try {
-            console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-            console.log(req.query)
-            console.log("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+
             const orderId = req.query.orderId
             const productId = req.query.productId
             const user = req.session.user
             const orders = await userHelpers.OrderProduct(user._id, productId, orderId)
-            console.log("ppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
-            console.log(orders[0]);
-            console.log("ppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
-
-
             const product = orders[0]
             res.render('user/trackOrder', { admin: false, product, user })
         } catch (err) {

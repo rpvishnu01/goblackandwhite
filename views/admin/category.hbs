@@ -8,7 +8,7 @@
                     <h4>Product Category </h4>
                     <span class="ml-1">B and W productd</span>
                 </div>
-                  
+
             </div>
 
         </div>
@@ -25,6 +25,7 @@
                                     <label for="formGroupExampleInput" class="form-label">Enter Category</label>
                                     <input type="text" class="form-control" id="formGroupExampleInput" name="Name"
                                         placeholder="enter category name" required>
+                                        <input type="text" id="categoryId"  name="Id" hidden>
                                 </div>
                                 <button type="submit" class="btn btn-success">Add Category</button>
                             </div>
@@ -38,50 +39,59 @@
 
 
 
-{{#if categories }}
-<div class="row">
+        {{#if categories }}
+        <div class="row">
 
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                {{!-- <h4 class="card-title">Bordered Table</h4> --}}
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{!-- <h4 class="card-title">Bordered Table</h4> --}}
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
 
-                    <table class="table table-bordered verticle-middle table-responsive-sm" id="catTable">
-                        <thead>
-                            <tr>
-                                <th scope="col">Category Name</th>
-                             
-                             
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each categories}}
-                            
-                            <tr>
-                                <td>{{this.CategoryName}}</td>
-                             
-                                <td>
-                                    <a href="/admin/deleteCategory/{{this._id}}"
-                                        onclick="return confirm('are you sure')" class="btn btn-danger"
-                                        data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <i class="fa fa-close color-danger"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            
-                            {{/each}}
-                        </tbody>
-                    </table>
+                            <table class="table table-bordered verticle-middle table-responsive-sm" id="catTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Category Name</th>
+
+
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each categories}}
+
+                                    <tr>
+                                        <td >{{this.CategoryName}}</td>
+                                        <td>
+                                            <a href="#"
+                                                class="mr-4  btn btn-success"
+                                                 onclick="editCategory('{{this.CategoryName}}','{{this._id}}')"
+                                                data-toggle="tooltip" data-placement="top" title="Edit">
+                                                <i class="fa fa-pencil color-muted"></i>
+                                            </a>
+
+                                            <a href="/admin/deleteCategory/{{this._id}}"
+                                                onclick="return confirm('are you sure')"
+                                                 class="btn btn-danger"
+                                                data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="fa fa-close color-danger"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-{{/if}}
+        {{/if}}
 
 
 
@@ -89,18 +99,26 @@
     </div>
 </div>
 
-     <script>
-       $(document).ready( function () {
-  
-  
-          $('#catTable').wrap('<div id="hide" style="display:none"/>');
-   
-         $('#hide').css( 'display', 'block' );
-     } );
-      
+<script>
+    $(document).ready(function () {
 
-         var table = $('#catTable').DataTable();
-       </script>
 
-  
+        $('#catTable').wrap('<div id="hide" style="display:none"/>');
 
+        $('#hide').css('display', 'block');
+    });
+
+
+    var table = $('#catTable').DataTable();
+</script>
+
+
+
+<script>
+    function editCategory(categoryName,categoryId) {
+       document.getElementById("formGroupExampleInput").value =categoryName
+        document.getElementById("categoryId").value =categoryId
+
+        
+    }
+</script>

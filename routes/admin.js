@@ -33,7 +33,7 @@ router.get('/view-users',verifyLoginAdmin, adminController.getViewUsers)
 
 router.get('/blockUser/:id',verifyLoginAdmin, adminController.getBlockUser)
 
-router.get('/unBlockUser/:id',verifyLoginAdmin ,adminController.getBlockUser)
+router.get('/unBlockUser/:id',verifyLoginAdmin ,adminController.getUnblockUser)
 
 router.get("/deleteProducts/:id",verifyLoginAdmin, adminController.getDeleteProduct)
 
@@ -46,6 +46,7 @@ router.get('/category',verifyLoginAdmin, adminController.getCategory)
 router.post('/category', adminController.postCategory)
 
 router.get('/deleteCategory/:id',verifyLoginAdmin, adminController.getDeleteCategory)
+
 
 router.get('/get-orders',verifyLoginAdmin, adminController.getOrders)
 

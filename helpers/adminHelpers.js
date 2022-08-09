@@ -73,8 +73,8 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       let Product;
       try {
-     Product = await productDb.findOne({ _id: data }).lean()
-      } catch(err) {
+        Product = await productDb.findOne({ _id: data }).lean()
+      } catch (err) {
         reject(err)
       }
       resolve(Product)
@@ -95,17 +95,14 @@ module.exports = {
       resolve(product)
     })
   },
-  addCategory:async (category) => {
-    try{
-    const response=await categorydb.create({
-      CategoryName: category.Name,
-    })
-    console.log("mmmmmmmmmmmmmmmmmm"); 
-    console.log(response);
-      console.log("mmmmmmmmmmmmmmmmmm");
-    resolve(response)
- 
-  }  catch(err){
+  addCategory: async (categoryName) => {
+    try {
+      const response = await categorydb.create({
+        CategoryName: categoryName,
+      })
+      resolve(response)
+
+    } catch (err) {
       console.log(err);
     }
   },
@@ -121,6 +118,18 @@ module.exports = {
       const removedCategory = await categorydb.findByIdAndDelete({ _id: CategoryId })
       resolve(removedCategory)
     })
+  },
+  editCategory: (CategoryId, CategoryName) => {
+    return new Promise(async (resolve, reject) => {
+      const editedCategory = await categorydb.findByIdAndUpdate(
+        { _id: CategoryId },
+        {
+          $set: { CategoryName: CategoryName }
+        }
+      )
+      resolve(editedCategory)
+    })
+
   },
   filteredProduct: (categoryid) => {
     //  const id= parseInt(categoryid)
@@ -637,12 +646,9 @@ module.exports = {
         response.exist = true
         resolve(response)
       } else {
-        console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
         response.addsuccess = true
         let coupon = new couponDb({
-
           couponCode: data.couponCode,
-
           couponType: data.couponType,
           couponValue: data.couponValue,
           couponValidFrom: data.couponValidFrom,
@@ -717,9 +723,6 @@ module.exports = {
       } catch (error) {
         console.log(error);
       }
-
-
-
     })
 
 
@@ -795,7 +798,7 @@ module.exports = {
         statusData.push(placedCount)
 
         console.log(statusData)
-   
+
         let shipped = await orderDb.aggregate([
           {
             $unwind: '$Products'

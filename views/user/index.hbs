@@ -64,13 +64,19 @@
                     <div class="label new">OUT OF STOKE</div>
 
                     {{else}}
-                      <ul class="product__hover   bw__controls">
+                      {{!-- <ul class="product__hover   bw__controls">
                         <li><button onclick="addToCart('{{this._id}}')" class="btn_one mb-2"> ADD TO <span
                                     class="icon_bag_alt"></span></button></li>
                         <li><button onclick="addToWishlist('{{this._id}}')" class="btn_one">ADD TO <span
                                     class="icon_heart_alt"></span></button></li>
 
-                    </ul>
+                    </ul> --}}
+
+
+                      <div class="bw__controls">
+                        <button onclick="addToCart('{{this._id}}')" class="btn_one mb-2"> ADD TO CART</button>
+                        <button onclick="addToWishlist('{{this._id}}')" class="btn_one"> ADD TO WISHLIST</button>
+                    </div>
                     {{/if}}
                   
 
@@ -99,10 +105,7 @@
 
 
 
-                    {{!-- <div class="bw__controls">
-                        <button onclick="addToCart('{{this._id}}')" class="btn_one mb-2"> ADD TO CART</button>
-                        <button onclick="addToWishlist('{{this._id}}')" class="btn_one"> ADD TO WISHLIST</button>
-                    </div> --}}
+                  
                 </div>
             </div>
         </div>

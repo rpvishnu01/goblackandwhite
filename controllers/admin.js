@@ -11,24 +11,22 @@ module.exports = {
         if (req.session.adminLoggedIn) {
             res.redirect('/admin/index')
         } else {
-           err= req.session.aderr
-            res.render('admin/ad-login-page', { loginpage: true, layout: "admin-layout",err });
+            err = req.session.aderr
+            res.render('admin/ad-login-page', { loginpage: true, layout: "admin-layout", err });
         }
     },
 
     getIndex: async (req, res, next) => {
         if (req.session.adminLoggedIn) {
-
-
             let productsCount = await adminHelpers.getProductCount()
             let usersCount = await adminHelpers.getUsersCount()
             let revenue = await adminHelpers.getRevenue()
-            let totalRevenue = revenue.total
+            // let totalRevenue = revenue.total
             let totalSale = await adminHelpers.getTotalSale()
             let paymentData = await adminHelpers.getPaymentData()
             let statusData = await adminHelpers.getStatusData()
 
-            res.render('admin/ad-index', { loginpage: false, layout: "admin-layout", productsCount, usersCount, totalSale, revenue, paymentData, totalRevenue, statusData });
+            res.render('admin/ad-index', { loginpage: false, layout: "admin-layout", productsCount, usersCount, totalSale, revenue, paymentData, statusData });
         }
         else {
             res.redirect('/admin')
@@ -41,7 +39,7 @@ module.exports = {
             res.redirect('/admin/index')
         } else {
             req.session.adminLoggedIn = false
-            req.session.aderr="wrong credential"
+            req.session.aderr = "wrong credential"
             res.redirect('/admin')
         }
 
@@ -92,12 +90,6 @@ module.exports = {
     getEditProduct: async (req, res) => {
         let productId = req.params.id
         const product = await adminHelpers.getOneProduct(productId)
-
-        console.log("ddddddddddddddddddddddddddd");
-        console.log(product);
-        console.log("ddddddddddddddddddddddddddd");
-
-
         res.render("admin/edit-product", { product, layout: "admin-layout" })
     },
     postEditProduct: async (req, res) => {
@@ -114,19 +106,25 @@ module.exports = {
         res.render("admin/category", { categories, layout: "admin-layout" })
 
     },
+    postCategory:async (req, res) => {
+        const Name = req.body.Name
+        if (req.body.Id) {
+            console.log("with id");
+            const Id = req.body.Id
+            const response = await adminHelpers.editCategory(Id, Name)
+        } else {
+            console.log("without id");
+            const response = await adminHelpers.addCategory(Name)
 
-    postCategory: (req, res) => {
-        adminHelpers.addCategory(req.body)
+        }
         res.redirect('/admin/category')
     },
-
     getDeleteCategory: async (req, res) => {
         const categoryId = req.params.id
 
         const response = await adminHelpers.deleteCategory(categoryId)
         res.redirect("/admin/category")
     },
-
     getOrders: async (req, res) => {
         const orders = await adminHelpers.orderDetails()
         res.render('admin/order', { orders, layout: "admin-layout" })
@@ -156,8 +154,6 @@ module.exports = {
         res.render('admin/Coupon', { layout: "admin-layout", exist: req.session.exist, success: req.session.addSucess })
     },
     postAddCoupon: async (req, res) => {
-        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqppppppppppppppppppppp");
-        console.log(req.body);
         const response = await adminHelpers.addCoupon(req.body)
         if (response.exist) {
             req.session.exist = true
@@ -167,9 +163,4 @@ module.exports = {
             res.redirect('/admin/coupon')
         }
     },
-
-
-
-
-
 }

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__links">
-                    <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                    <a href="/"><i class="fa fa-home"></i> Home</a>
                     <span>Shopping cart</span>
                 </div>
             </div>
@@ -13,185 +13,110 @@
 </div>
 <!-- Breadcrumb End -->
 
-<!-- Shop Cart Section Begin -->
-<section class="shop-cart spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="shop__cart__table">
+
+<section class="h-100" style="background-color: #eee;">
+    <div class="container h-100 py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-10">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
+                  
+                </div>
+                {{#each CartItems}}
+                <div class="card rounded-3 mb-4">
+                    <div class="card-body p-4">
+                        <div class="row d-flex justify-content-between align-items-center">
+                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                <img src="/product-images/{{this.CartProducts.Images.[0].filename}}"
+                                    class="img-fluid rounded-3" alt="Cotton T-shirt">
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                <p class="lead fw-normal mb-2"> {{this.CartProducts.ProductName}}</p>
+                                <p><span class="text-muted"> {{this.CartProducts.About}}</span></p>
+                                <p><span class="text-muted">Size: </span>{{this.CartProducts.Size}} <span
+                                        class="text-muted">Color: </span>{{this.CartProducts.Color}}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                <button class="btn btn-link px-2"
+                                    onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',-1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <p class="text-center mx-3"> <span class="text-muted">{{this.Quantity}}</span></p>
 
 
-
-
-
-                    <table>
-                        <thead>
-
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-
-                                <th>Quantity</th>
-                                <th>Remove</th>
-                                {{!-- <th>Total</th> --}}
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each CartItems}}
-                            <tr>
-                                <td class="cart__product__item">
-                                    <img src="/product-images/{{this.CartProducts.Images.[0].filename}}" alt=""
-                                        style="width:100px ;height:100px">
-                                    <div class="cart__product__item__title">
-                                        <h6> {{this.CartProducts.ProductName}}</h6>
-                                        <p>{{this.CartProducts.About}}</p>
-                                        {{!-- {{#if Product_id.Stock }}
-                                        <p class="text-danger"> OUT OF STOKE</p>
-                                        {{/if}} --}}
-
-                                        <div class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price">{{this.totalPrice}}</td>
-                                <td class="cart__price">
-                                    {{!-- <div class="pro-qty">
-                                        <input type="text" value="1">
-                                    </div> --}}
-
-
-                                    {{!-- <button type="button" class="btn btn-default btn-circle mr-2"
-                                        onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',-1)">-</button>
-                                    {{this.Quantity}}
-
-
-
-                                    <button type="button" class="btn btn-default btn-circle ml-2"
-                                        onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',1)">+</button>
-                                    --}}
-
-
-
-                                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                                        <div class="btn-group mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',-1)">-</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',1)">+</button>
-                                            <h4>&nbsp;&nbsp; {{this.Quantity}}</h4>
-                                        </div>
-
-
-                                    </div>
-
-
-                                </td>
-
-
-
-                                {{!-- <td class="cart__total">$ {{this.total}} </td> --}}
-
-                                <td>
-
-                                    <button class="btn btn-default btn-circle ml-2"
-                                        onclick="removeProductFromCart('{{this.CartProducts._id}}')">x</button>
-
-
-
-                                </td>
-                            </tr>
+                                <button class="btn btn-link px-2"
+                                    onclick="changeQuantity('{{this._id}}','{{CartProducts._id}}','{{this.Quantity}}','{{this.CartProducts.Price}}',1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                <h5 class="mb-0">{{this.totalPrice}} </h5>
+                            </div>
+                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                <a href="#" class="text-danger"
+                                    onclick="removeProductFromCart('{{this.CartProducts._id}}')"><i
+                                        class="fas fa-trash fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="discount__content">
+                            <h6>Discount codes</h6>
+                            <form action="" method="post" id="appycoupon">
+                                <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
+                                    name="CoupenCode" id="couponC" required>
+                                <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
+                                    name="total" value="{{total}}" hidden required> <br>
+                                <p class="text-success" id="scsmessage"></p>
+                                <button type="submit" class="site-btn">Apply</button>
+                            </form>
+                            {{#if Coupon}}
+                            {{#each Coupon}}
+                            <div class="coupon" id="maincontent"></div>
+                            <p><br /> Take {{this.couponValue}} off
+                                On your first Order use code
+                                <button class="coup" id="copy"
+                                    onclick="getCoup('{{this.couponCode}}')">{{this.couponCode}}</button> at
+                                checkout.
+                            </p>
                             {{/each}}
+                            {{!-- <input id="cleared"></input> --}}
 
+                            {{else}}
+                            <p class="text-danger">No Applicable coupons ...</p>
+                            {{/if}}
+                        </div>
+                    </div>
 
-                        </tbody>
-                    </table>
+                    <div class="col-lg-6">
+                        <div class="cart__total__procced">
+                            <h6>Cart total</h6>
+                            <ul>
+                                {{#each CartItems}}
+                                <li>{{this.CartProducts.ProductName}} ( {{this.Quantity}} x {{this.Price}} )
+                                    <span>{{this.totalPrice}}</span>
+                                </li>
 
+                                {{/each}}
 
+                                <li>Subtotal <span>{{total}}</span></li>
 
-
-
+                                <li>Discount <span id="discound">0</span></li>
+                                <li>Total <span id="totalAmt">{{total}}</span></li>
+                            </ul>
+                            <a href="/checkout" class="primary-btn">Proceed to checkout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-       
-            <div class="row">
-
-
-
-
-
-
-
-
-                <div class="col-lg-6">
-                    <div class="discount__content">
-                        <h6>Discount codes</h6>
-                        <form action="" method="post" id="appycoupon">
-                            <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
-                                name="CoupenCode" id="couponC" required>
-                            <input type="text" placeholder="Enter your coupon code" style="border-radius:0;"
-                                name="total" value="{{total}}" hidden required> <br>
-                            <p class="text-success" id="scsmessage"></p>
-                            <button type="submit" class="site-btn">Apply</button>
-
-
-
-                        </form>
-                        {{#if Coupon}}
-                        {{#each Coupon}}
-                        <div class="coupon" id="maincontent"></div>
-                        <p><br /> Take {{this.couponValue}} off
-                            On your first Order use code
-                            <button class="coup" id="copy"
-                                onclick="getCoup('{{this.couponCode}}')">{{this.couponCode}}</button> at
-                            checkout.
-                        </p>
-                        {{/each}}
-                        {{!-- <input id="cleared"></input> --}}
-
-                        {{else}}
-                        <p class="text-danger">No Applicable coupons ...</p>
-                        {{/if}}
-                    </div>
-                </div>
-
-
-
-
-
-
-
-                <div class="col-lg-6">
-                    <div class="cart__total__procced">
-                        <h6>Cart total</h6>
-                        <ul>
-                            {{#each CartItems}}
-                            <li>{{this.CartProducts.ProductName}} ( {{this.Quantity}} x {{this.Price}} )
-                                <span>{{this.totalPrice}}</span>
-                            </li>
-
-                            {{/each}}
-
-                            <li>Subtotal <span>{{total}}</span></li>
-
-                            <li>Discount <span id="discound">0</span></li>
-                            <li>Total <span id="totalAmt">{{total}}</span></li>
-                        </ul>
-                        <a href="/checkout" class="primary-btn">Proceed to checkout</a>
-                    </div>
-                </div>
-            </div>
-        
     </div>
 </section>
-<!-- Shop Cart Section End -->
 
 
 
