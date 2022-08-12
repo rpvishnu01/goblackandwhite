@@ -24,7 +24,7 @@
     <form class="login-form" action="/signup" method="post">
       <input type="text" name="FirstName" placeholder="First Name" required/>
       <input type="text" name="LastName" placeholder="Last Name" required/>
-      <input type="tel" name="MobNo" placeholder="Mobile No" required/>
+      <input type="tel" name="MobNo" placeholder="Mobile No" minlength="10" maxlength="10" required/>
        <input type="text" name="Email" placeholder="Email ID"required/>
       <input type="password" name="Password" placeholder="Password" required/>
       <button>SignUp</button>

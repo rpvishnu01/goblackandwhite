@@ -8,11 +8,13 @@ const addressDb = require('../models/Address')
 const couponDb = require('../models/Coupon')
 require('dotenv').config()
 const bcrypt = require('bcrypt')
-var nodemailer = require("nodemailer");
+// var nodemailer = require("nodemailer");
 const { default: mongoose } = require('mongoose')
 const trim = require('moment')
-
+// const otp = require('../config/sms')
 const Razorpay = require('razorpay');
+const { resolve } = require('path')
+const sms = require('../config/sms');
 
 
 
@@ -34,6 +36,25 @@ module.exports = {
                 response.message = "Email id or Mobile number is already used please login"
                 resolve(response)
             } else {
+
+                // const smsStatus = await sms.dosms(userData)
+                // userData.Password = await bcrypt.hash(userData.Password, 10)
+                // const response = new userDb({
+                //     FirstName: userData.FirstName,
+                //     LastName: userData.LastName,
+                //     Email: userData.Email,
+                //     Password: userData.Password,
+                //     MobNo: userData.MobNo,
+                // })
+                response.status = false
+                // response.newUser = response
+                // await response.save()
+                resolve(response)
+            }
+
+
+
+
                 // userData.Password = await bcrypt.hash(userData.Password, 10)
                 // const otpMaker = Math.floor(1000 + Math.random() * 9000);
                 // console.log("==============================================")
@@ -80,23 +101,12 @@ module.exports = {
                 // response.status = false
                 // response.newUser = newUser
                 // resolve(response)
-                userData.Password = await bcrypt.hash(userData.Password, 10)
-                const response = new userDb({
-                    FirstName: userData.FirstName,
-                    LastName: userData.LastName,
-                    Email: userData.Email,
-                    Password: userData.Password,
-                    MobNo: userData.MobNo,
-                })
-                response.status = false
-                response.newUser = response
-                await response.save()
-                resolve(response)
-            }
+            
         })
     },
     addUser: (userData) => {
         return new Promise(async (resolve, reject) => {
+              userData.Password = await bcrypt.hash(userData.Password, 10)
             const addUserData = new userDb({
                 FirstName: userData.FirstName,
                 LastName: userData.LastName,
@@ -129,7 +139,7 @@ module.exports = {
                             resolve(response)
                         } else {
                             console.log("pass not match")
-                            response.message = "Wrong credentials"
+                            response.message = "Wrong credential"
                             response.status = true
                             resolve(response)
                         }
@@ -137,7 +147,7 @@ module.exports = {
                 } else {
                     console.log("no user")
                     response.status = true
-                    response.message = "Wrong credensials"
+                    response.message = "Wrong credential"
                     resolve(response)
                 }
             }
@@ -316,9 +326,10 @@ module.exports = {
             } else {
                 if (data.count == -1) {
                     data.totalPrice *= -1
-                    console.log("baaaaaaaaa");
+
                     let items = await cartDb.updateOne(
                         { UserId: mongoose.Types.ObjectId(user) },
+                    
                         {
                             $inc: {
                                 "CartItems.$[i].Quantity": data.count,
@@ -327,14 +338,18 @@ module.exports = {
                         },
                         {
                             arrayFilters: [{ "i.Product_id": { $eq: mongoose.Types.ObjectId(data.product) } }]
-                        }
+                        },
+                       
 
 
                     ).exec()
+
+                    console.log(items);
                     resolve(items)
                 } else {
                     let items = await cartDb.updateOne(
                         { UserId: mongoose.Types.ObjectId(user) },
+                       
                         {
                             $inc: {
                                 "CartItems.$[i].Quantity": data.count,
@@ -343,7 +358,7 @@ module.exports = {
                         },
                         {
                             arrayFilters: [{ "i.Product_id": { $eq: mongoose.Types.ObjectId(data.product) } }]
-                        }
+                        },
                     ).exec()
                     resolve(items)
 
@@ -394,9 +409,7 @@ module.exports = {
                     }
                 ])
 
-                console.log("wweeeeeeeeeeeeeeeee");
-                console.log(total);
-                console.log("wweeeeeeeeeeeeeeeee");
+
 
 
                 await cartDb.updateOne(
@@ -515,6 +528,7 @@ module.exports = {
     placeOrder: (orderDetails, total, user) => {
         return new Promise(async (resolve, response) => {
             let status = orderDetails['payment-method'] === 'COD' ? 'placed' : 'pending'
+
             let prods = await cartDb.aggregate([
                 {
                     $match: { UserId: mongoose.Types.ObjectId(user) },
@@ -530,6 +544,7 @@ module.exports = {
                         Quantity: "$CartItems.Quantity",
                         Price: "$CartItems.Price",
                         totalPrice: "$CartItems.totalPrice",
+
                         Shipped: "$CartItems.Shipped",
                         Cancelled: "$CartItems.Cancelled",
                         Delivered: "$CartItems.Delivered",
@@ -542,6 +557,7 @@ module.exports = {
             const orderObj = new orderDb({
                 UserId: mongoose.Types.ObjectId(orderDetails.userId),
                 Total: total,
+                discoundedAmt:orderDetails.discount,
                 Status: status,
                 Date: new Date(),
                 DeliveryDetails: {
@@ -568,55 +584,93 @@ module.exports = {
     },
     OrderDetails: (userId) => {
         return new Promise(async (resolve, reject) => {
-            // const orders = await orderDb.find({ UserId: mongoose.Types.ObjectId(userId) }).populate('Products.Product_id').lean()
+            try {
+                // const orders = await orderDb.find({ UserId: mongoose.Types.ObjectId(userId) }).populate('Products.Product_id').lean()
 
-            let orders = await orderDb.aggregate([
-                {
-                    $match: { UserId: mongoose.Types.ObjectId(userId) },
-                },
-                {
-                    $unwind: "$Products",
-                },
-                {
-                    $lookup: {
-                        from: "products",
-                        localField: "Products.Product_id",
-                        foreignField: "_id",
-                        as: "result",
-                    },
-                },
-                {
-                    $unwind: "$result",
-                },
-                {
-                    $project: {
-                        totalPrice: 1,
-                        date: 1,
-                        Products: 1,
-                        result: 1,
-                        DeliveryDetails: 1,
-                        Total: 1
-                    },
-                },
-                {
-                    $sort: {
-                        date: -1,
-                    },
-                },
-            ]).exec();
 
-            resolve(orders)
+                let orders = await orderDb.aggregate([
+                    {
+                        $match: { UserId: mongoose.Types.ObjectId(userId) },
+                    },
+                    {
+                        $sort: {
+                            date: -1,
+                        },
+                    },
+                ]).exec();
+
+
+
+                resolve(orders)
+
+            } catch (err) {
+                console.log(err);
+                reject(err)
+            }
+
 
         })
     },
-    // OrderedProductDetails: (orderId) => {
-    //     return new Promise(async (resolve, reject) => {
-    //         const products = await orderDb.findById(mongoose.Types.ObjectId(orderId)).populate('Products.Product_id').lean()
+    OrderedProductDetails: (userId, orderId) => {
 
-    //         resolve(products)
-    //     })
+        return new Promise(async (resolve, reject) => {
+            // const orders = await orderDb.find({ UserId: mongoose.Types.ObjectId(userId) }).populate('Products.Product_id').lean()
+           
 
-    // },
+            try{
+                let orders = await orderDb.aggregate([
+                    {
+                        $match: { UserId: mongoose.Types.ObjectId(userId), _id: mongoose.Types.ObjectId(orderId) },
+                    },
+                    {
+                        $unwind: "$Products",
+                    },
+                    {
+                        $lookup: {
+                            from: "products",
+                            localField: "Products.Product_id",
+                            foreignField: "_id",
+                            as: "result",
+                        },
+                    },
+                    {
+                        $unwind: "$result",
+                    },
+                    {
+                        $project: {
+                            totalPrice: 1,
+                            date: 1,
+                            Products: 1,
+                            result: 1,
+                            DeliveryDetails: 1,
+                            Total: 1
+                        },
+                    },
+                    {
+                        $sort: {
+                            date: -1,
+                        },
+                    },
+                ]).exec();
+    
+                resolve(orders)
+                
+            }catch(err){
+                console.log(err);
+                reject(err)
+            }
+        
+
+        })
+    },
+    OrderedProductInvoice: (orderId) => {
+        return new Promise(async (resolve, reject) => {
+            const products = await orderDb.findById(mongoose.Types.ObjectId(orderId)).populate('Products.Product_id').lean()
+
+            resolve(products)
+        })
+
+    },
     genarateRzp: (orderId, total) => {
         return new Promise((resolve, reject) => {
 
@@ -632,8 +686,7 @@ module.exports = {
                     if (err) {
                         console.log(err)
                     } else {
-                        console.log("new order")
-                        console.log(order);
+
                         resolve(order)
                     }
                 }
@@ -657,12 +710,13 @@ module.exports = {
     changePaymentStatus: (orderId) => {
         return new Promise(async (resolve, reject) => {
 
-            console.log(orderId)
+
+
             const responce = await orderDb.updateOne(
                 { _id: mongoose.Types.ObjectId(orderId) },
                 {
                     $set: {
-                        "Status.Placed": true,
+                        'Products.$[].status': 'placed'
                     }
                 }
             )
@@ -670,33 +724,47 @@ module.exports = {
         })
     },
     removeOrder: (data) => {
+
         let proid = mongoose.Types.ObjectId(data.productId)
         let orderId = mongoose.Types.ObjectId(data.orderId)
+        let productPrize = parseInt(data.productPrize)
+        let TotalPrice = parseInt(data.TotalPrice)
+        let newtotal = TotalPrice - productPrize
+
+
+
 
         return new Promise(async (resolve, reject) => {
             const responce = await orderDb.updateOne(
                 { _id: orderId },
+                // {
+                //     $set: {
+                //      
 
+                //     }
+                // },
                 {
                     $set: {
                         'Products.$[i].Cancelled': true,
-                        'Products.$[i].status': 'Cancelled'
+                        'Products.$[i].status': 'Cancelled',
+                        Total: newtotal
                     }
                 },
                 {
                     arrayFilters: [{ "i.Product_id": { $eq: proid } }]
-                }
+                },
+
 
             )
 
-            console.log(responce);
+
             resolve(responce)
         })
     },
     addAddress: (data, user) => {
         return new Promise(async (resolve, reject) => {
             const address = await addressDb.findOne({ UserId: mongoose.Types.ObjectId(user) })
-            console.log(address)
+
             if (address) {
                 if (data.addressId) {
                     const newAdd = await addressDb.updateOne(
@@ -776,10 +844,10 @@ module.exports = {
                     }
 
                 }
-                console.log(total);
+
 
                 if (total) {
-                    console.log("here");
+
                     const couponsAboveFiveThousand = await couponDb.find({ minValue: { $lte: total }, couponCode: { $ne: 'FSt01' } }).lean()
                     coupons = [...coupons, ...couponsAboveFiveThousand];
                 }
@@ -791,9 +859,9 @@ module.exports = {
         })
     },
 
-    ApplayCoupon: (data, userId) => {
+    ApplayCoupon: (data,total ,userId) => {
         let coupon = data.CoupenCode
-        let TotalPrice = data.total
+        // let TotalPrice = data.total
         let dateIso = new Date()
         let date = trim(dateIso).format("YYYY-MM-DD")
         let response = {}
@@ -803,9 +871,9 @@ module.exports = {
                 { $unwind: "$users" },
                 { $match: { 'users.userId': mongoose.Types.ObjectId(userId) } }
             ]).exec()
-            console.log(userEligibility.length)
+
             if (userEligibility.length == 0) {
-                console.log("1qqqqqqqqq");
+
                 const values = await couponDb.aggregate([
 
                     {
@@ -825,10 +893,10 @@ module.exports = {
                 let minPurchase = values[0].minValue
                 let couponExpire = values[0].couponValidTo
 
-                if (TotalPrice >= minPurchase) {
+                if (total >= minPurchase) {
                     if (couponExpire >= date) {
                         console.log('coupon is valid')
-                        response.netAmount = TotalPrice - couponDiscount
+                        response.netAmount = total - couponDiscount
                         response.couponApplied = true
                         response.savedMoney = couponDiscount
                         resolve(response)
@@ -909,6 +977,25 @@ module.exports = {
                 reject(err)
 
             }
+        })
+    },
+    editProfile: (data, userId) => {
+        return new Promise(async (resolve, reject) => {
+            const uderData = await userDb.findOneAndUpdate(
+                { UserId: mongoose.Types.ObjectId(userId) },
+                {
+                    $set: {
+                        FirstName: data.FirstName,
+                        LastName: data.LastName,
+                        Email: data.Email,
+                        MobNo: data.Mob
+                    }
+                }
+            )
+            console.log("iiiiiiiii");
+            console.log(uderData);
+            console.log("iiiiiiiii");
+            resolve(uderData)
         })
     }
 

@@ -7,7 +7,7 @@ const sms = require('../config/sms');
 const category = require('../models/category');
 
 let pr;
-let countWishlist=null
+let countWishlist = null
 
 
 
@@ -46,6 +46,7 @@ module.exports = {
         } else {
             const err = req.session.message
             res.render('user/login-page', { admin: false, err })
+            req.session.message = false
 
         }
 
@@ -87,14 +88,24 @@ module.exports = {
                 req.session.message = response.message
                 res.redirect('/signup')
             } else {
-                const newUser = response.newUser
+                const smsStatus = await sms.dosms(req.body)
+                if (smsStatus) {
+                    req.session.newUser = req.body
+                    res.redirect('/otp-verifier')
+                } else {
+                    res.redirect('/signup')
+                }
+
+
+
+                // const newUser = response.newUser
                 // req.session.otp = newUser.otp
-                req.session.userData = newUser
+                // req.session.userData = newUser
                 // req.session.count = 1
                 // res.redirect('/otp-verifier')
-                req.session.user = response
-                req.session.loggedIn = true
-                res.redirect('/')
+                // req.session.user = response
+                // req.session.loggedIn = true
+                // res.redirect('/')
             }
         } catch (err) {
             console.log(err);
@@ -105,43 +116,116 @@ module.exports = {
         if (req.session.loggedIn) {
             res.redirect('/')
         }
-        const otpErr = req.session.otpErr
+        let otpErr = req.session.otpErr
         res.render('user/otp-verifier', { admin: false, otpErr })
+        req.session.otpErr=false
+    
     },
-
-
 
     postOtpVerifier: async (req, res, next) => {
-        try {
-            const formOtp = req.body.Otp
-            const genaratedOtp = req.session.otp
-            console.log(genaratedOtp)
-            const userData = req.session.userData
-            console.log(userData)
-            if (formOtp == genaratedOtp) {
-                console.log("verified")
-                const responce = await userHelpers.addUser(userData)
-                req.session.user = responce
-                req.session.loggedIn = true
-                res.redirect('/')
-            }
-            else {
-                var count = req.session.count
-                if (count <= 2) {
-                    req.session.count = count + 1
+          console.log("pppppppppppppppppp");
+        console.log(req.body);
+        console.log("pppppppppppppppppp");
+        const newUser = req.session.newUser
 
-                    req.session.otpErr = "enter valid otp"
-                    res.redirect('/otp-verifier')
-                } else {
-                    res.redirect('/signup')
-                }
-            }
+        
 
-        } catch (err) {
-            console.log(err);
-            next(err)
+        const otpStatus = await sms.otpVerify(req.body.Otp, newUser)
+
+        if (otpStatus.valid) {
+
+            const response = await userHelpers.addUser(newUser)
+            req.session.user = response
+            req.session.loggedIn = true
+            res.redirect('/')
+
+        } else {
+            req.session.otpErr =true
+            res.redirect('/otp-verifier')
+          
         }
+
     },
+
+    otpverifyend:(req,res)=>{
+        res.redirect('/signup')
+    },
+
+
+
+    // postOtpVerifier: async (req, res, next) => {
+    //     try {
+    //         sms.otpVerify(req.body, req.session.userData).then((response) => {
+    //             if (response.valid) {
+
+    //               userHelpers.doSignup(req.session.userData).then((response) => {
+    //                 console.log(response);
+    //                 req.session.loggedIn = true;
+
+
+    //                 // console.log("login sucess");
+    //                 req.session.user = req.body
+    //                 res.redirect("/");
+    //               });
+    //             }
+    //             else {
+    //               req.session.otpErr = true;
+    //               res.redirect("/otp-verifier");
+    //             }
+    //           });
+
+
+
+
+
+
+
+
+
+    //         const formOtp = req.body.Otp
+    //         const genaratedOtp = req.session.otp
+    //         console.log(genaratedOtp)
+    //         const userData = req.session.userData
+
+    //         if (formOtp == genaratedOtp) {
+    //             console.log("verified")
+    //             const responce = await userHelpers.addUser(userData)
+    //             req.session.user = responce
+    //             req.session.loggedIn = true
+    //             res.redirect('/')
+    //         }
+    //         else {
+    //             var count = req.session.count
+    //             if (count <= 2) {
+    //                 req.session.count = count + 1
+
+    //                 req.session.otpErr = "enter valid otp"
+    //                 res.redirect('/otp-verifier')
+    //             } else {
+    //                 res.redirect('/signup')
+    //             }
+    //         }
+
+    //     } catch (err) {
+    //         console.log(err);
+    //         next(err)
+    //     }
+    // },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     getAddtocart: (req, res, next) => {
         try {
             const productId = req.params.id
@@ -162,11 +246,14 @@ module.exports = {
             const user = req.session.user
             const CartItems = await userHelpers.getCartData(userId)
             const countCart = await userHelpers.getcartCount(userId)
-         countWishlist = await userHelpers.getWishlistCount(userId)
+            countWishlist = await userHelpers.getWishlistCount(userId)
 
-            console.log("ppppppp");
+            console.log(user);
             console.log(CartItems);
-            console.log("ppppppp");
+            console.log(countCart);
+            console.log(countWishlist);
+
+
 
             if (countCart === 0) {
                 const page = 'noCart'
@@ -184,6 +271,12 @@ module.exports = {
 
                 const total = await userHelpers.CartTotal(userId)
                 const Coupon = await userHelpers.CouponCode(user._id, total)
+                console.log("iiiiiiiiiiiiii");
+                console.log(total);
+                console.log("iiiiiiiiiiiiii");
+
+
+
                 res.render('user/cart', { admin: false, CartItems, user, countCart, countWishlist, total, Coupon })
             }
 
@@ -192,10 +285,16 @@ module.exports = {
             next(err)
         }
     },
-    getChangeProductQuantity: (req, res, next) => {
+    getChangeProductQuantity: async (req, res, next) => {
         try {
+            console.log("ppppppppppp");
+            console.log(req.body);
+            console.log("ppppppppppp");
             user = req.session.user._id
-            const response = userHelpers.changeProductQuantity(req.body, user)
+            const response = await userHelpers.changeProductQuantity(req.body, user)
+
+            console.log(response);
+
             res.json(response)
         } catch (err) {
             console.log(err);
@@ -303,7 +402,7 @@ module.exports = {
     getShop: async (req, res, next) => {
         try {
             const user = req.session.user
-            console.log(req.body);
+
             const shopProd = await adminHelpers.shopProd()
             countCart = await userHelpers.getcartCount(user._id)
             pr = shopProd
@@ -369,10 +468,10 @@ module.exports = {
             if (pr.length === 0) {
 
                 const Empty = true
-                res.render('user/shop', { admin: false, user, Empty, category, countCart,countWishlist });
+                res.render('user/shop', { admin: false, user, Empty, category, countCart, countWishlist });
             } else {
 
-                res.render('user/shop', { admin: false, user, pr, category, countCart,countWishlist });
+                res.render('user/shop', { admin: false, user, pr, category, countCart, countWishlist });
 
             }
         } catch (err) {
@@ -389,7 +488,7 @@ module.exports = {
             const countCart = await userHelpers.getcartCount(user._id)
             countWishlist = await userHelpers.getWishlistCount(user._id)
             const address = await userHelpers.getAddress(user._id)
-            res.render('user/checkout', { admin: false, CartItems, user, address, countCart,countWishlist })
+            res.render('user/checkout', { admin: false, CartItems, user, address, countCart, countWishlist })
         } catch (err) {
             console.log(err);
             next(err)
@@ -397,21 +496,24 @@ module.exports = {
     },
     postPlaceOrder: async (req, res, next) => {
         try {
+
+            console.log("eeeeeeeeeeeee");
+            console.log(req.body);
+            console.log("eeeeeeeeeeeee");
+
             const user = req.session.user
             // const total = await userHelpers.CartTotal(user._id)
             let total = req.body.netTotal
             const orderId = await userHelpers.placeOrder(req.body, total, user._id)
             userHelpers.addAddress(req.body, user._id)
             if (req.body['payment-method'] === 'COD') {
-
                 res.json({ cod_success: true })
             } else {
                 const response = await userHelpers.genarateRzp(orderId, total)
-                res.json(response)
 
+                res.json(response)
             }
         } catch (err) {
-            console.log("kya karoooo bai")
             console.log(err)
             next(err)
         }
@@ -431,21 +533,33 @@ module.exports = {
         try {
             const user = req.session.user
             const orders = await userHelpers.OrderDetails(user._id)
+
+
+
             res.render('user/order-details', { admin: false, user, orders })
         } catch (err) {
             console.log(err);
             next(err)
         }
     },
-    // getOrderProduct: async (req, res) => {
-    //     const user = req.session.user
-    //     console.log(req.params.id)
-    //     const orderId = req.params.id
-    //     const products = await userHelpers.OrderedProductDetails(orderId)
-    //     res.render('user/view-order-products', { admin: false, products, user })
+    getOrderProduct: async (req, res, next) => {
+        try {
+            const orderId = req.params.id
+            const user = req.session.user
+            const orders = await userHelpers.OrderedProductDetails(user._id, orderId)
+            res.render('user/view-order-products', { admin: false, user, orders })
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
 
-    // },
+    },
     postVerifyPayment: (req, res, next) => {
+
+
+
+
+
         userHelpers.VerifyPayment(req.body).then(() => {
             userHelpers.changePaymentStatus(req.body['order[receipt]']).then(() => {
                 console.log("payment successfull");
@@ -476,6 +590,8 @@ module.exports = {
             const address = await userHelpers.getAddress(user._id)
             const countCart = await userHelpers.getcartCount(user._id)
             countWishlist = await userHelpers.getWishlistCount(user._id)
+            wishlistItems = await userHelpers.getWishlistData(user._id)
+
             //   if(address){
             //     console.log("!!!!222222222222222222222");
             //     console.log(address);
@@ -483,8 +599,8 @@ module.exports = {
 
             //     res.render('user/profile', { admin: false,user,addreslist:address})
             //   }
-            console.log(address);
-            res.render('user/profile', { admin: false, user, address, countCart ,countWishlist})
+
+            res.render('user/profile', { admin: false, user, address, countCart, countWishlist, wishlistItems })
 
         }
         catch (err) {
@@ -493,10 +609,18 @@ module.exports = {
         }
 
     },
+    getAddNewAddress: async (req, res) => {
+        const user = req.session.user
+        const countCart = await userHelpers.getcartCount(user._id)
+        countWishlist = await userHelpers.getWishlistCount(user._id)
+        const address = await userHelpers.getAddress(user._id)
+        res.render('user/add-new-address', { admin: false, user, countCart, address, countWishlist })
+
+    },
 
     postAddress: (req, res, next) => {
         try {
-            console.log(req.body);
+
             const user = req.session.user._id
             userHelpers.addAddress(req.body, user)
             // res.redirect('/account')
@@ -509,10 +633,11 @@ module.exports = {
     },
     postApplayCoupon: async (req, res, next) => {
         try {
-            // console.log("basim");
+            console.log("basim");
             console.log(req.body);
             const user = req.session.user._id
-            const appliedCoupon = await userHelpers.ApplayCoupon(req.body, user)
+            const total = await userHelpers.CartTotal(user)
+            const appliedCoupon = await userHelpers.ApplayCoupon(req.body,total, user)
             req.session.savedMoney = appliedCoupon.savedMoney
             req.session.netTotal = appliedCoupon.netAmount
 
@@ -536,6 +661,50 @@ module.exports = {
             next(err)
         }
     },
+    getOrderInvoice: async (req, res, next) => {
+        try {
+
+            const orderId = req.query.orderId
+
+            const user = req.session.user
+            const orders = await userHelpers.OrderedProductInvoice(orderId)
+
+            res.render('user/all-order-invoice', { admin: false, orders, user })
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    },
+    getEditProfile: (req, res) => {
+        const user = req.session.user
+        res.render('user/edit-profile', { admin: false, user })
+        console.log(user);
+    },
+    postEditProfile: async (req, res) => {
+        console.log("oooooooooooooooooooo");
+        console.log(req.body);
+        console.log("oooooooooooooooooooo");
+        const user = req.session.user
+        console.log(user);
+
+        const response = await userHelpers.editProfile(req.body, user._id)
+
+        // console.log("oooooooooooooooooooo");
+        // console.log(response);
+        // console.log("oooooooooooooooooooo");
+        req.session.user = response
+        // console.log("oooooooooooooooooooo1");
+        // console.log( req.session.user);
+        // console.log("oooooooooooooooooooo1");
+        response.status = true
+        res.json(response)
+
+    },
+    //     getEditProfile: async(req,res)=>{
+    //    const  user=req.session.user
+    //    userData=await userHelpers.editProfile(user)
+    //    console.log(user);
+    //     },
     getChat: (req, res, next) => {
         try {
             res.render('user/chat', { admin: false })

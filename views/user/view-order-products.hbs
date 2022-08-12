@@ -1,23 +1,161 @@
-<section class="product ">
-    <div class="row property__gallery">
-        {{#each products.Products}}
-        <div class="col-lg-3 col-md-4 col-sm-6 mix women">
-            <div class="product__item mt-4" >
-                {{!-- <div class="product__item__pic set-bg  img-wrapper">
-                    <img class="inner-img" src="/product-images/{{Product_id.Images.[0].filename}}"
-                            alt="">
-                </div> --}}
-                <img src="/product-images/{{Product_id.Images.[0].filename}}" alt="">
-                <div class="product__item__text">
-                    <h5><a href="#">{{Product_id.ProductName}}</a></h5>
-                      <h5><a href="#">Qnt-{{this.Quantity}}</a></h5>
-                    <div class="product__price mt-1 mb-1">
-                        <h5>₹{{Product_id.Price}}/-</h5>
-                    </div>
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="/"><i class="fa fa-home"></i> Home</a>
+                    <span>Order Details</span>
                 </div>
             </div>
         </div>
-        {{/each}}
     </div>
-</section>
-<!-- Product Section End -->
+</div>
+
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{{!-- <div class="col-lg-12">
+  <div class="shop__cart__table"> --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <table class="table" id="ordertable">
+      <thead>
+        <tr>
+           <th scope="col">Product Img</th>
+          <th scope="col">Product</th>
+          <th scope="col">Address</th>
+          <th scope="col">Date</th>
+          <th scope="col">Total</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+          {{!-- <th scope="col">Action</th> --}}
+        </tr>
+      </thead>
+      <tbody>
+
+
+        {{#each orders }}
+
+        <tr>
+
+<td>
+     <a href="/track-order?productId={{this.Products.Product_id}}&orderId={{this._id}}" class="row-link">
+              <img src="/product-images/{{this.result.Images.[0].filename}}" alt=""
+                style="width:80px ;height:80px">
+                </a>
+
+</td>
+          <td> 
+
+            <a href="/track-order?productId={{this.Products.Product_id}}&orderId={{this._id}}" class="row-link">
+              {{!-- <img src="/product-images/{{this.result.Images.[0].filename}}" alt=""
+                style="width:100px ;height:100px"> --}}
+
+              <h6> {{this.result.ProductName}} </h6>
+              <p>{{this.result.About}}</p>
+              <p>Qnt-{{this.Products.Quantity}}</p>
+            </a>
+          </td>
+          <td>
+            <a href="/track-order?productId={{this.Products.Product_id}}&orderId={{this._id}}" class="row-link">
+              <p>{{this.DeliveryDetails.FirstName}} {{this.DeliveryDetails.LastName}}
+                ,{{this.DeliveryDetails.Address}},{{this.DeliveryDetails.Town}},{{this.DeliveryDetails.State}},
+                {{this.DeliveryDetails.Pin}} <br> {{this.DeliveryDetails.Mob}} ,{{this.DeliveryDetails.Email}}
+              </p>
+            </a>
+          </td>
+          <td>
+            <a href="/track-order?productId={{this.Products.Product_id}}&orderId={{this._id}}" class="row-link">
+              <p> {{this.date}}</p>
+            </a>
+          </td>
+          <td> <a href="/track-order?productId={{this.Products.Product_id}}&orderId={{this._id}}" class="row-link">{{this.Products.totalPrice}}</a></td>
+          {{!-- <td> <a href="/remove-order-product/{{this._id}}" class="btn btn-danger mb-2">Cancel Orders</a></td>
+          --}}
+          <td>{{this.Products.status}}</td>
+
+          {{#if this.Products.Cancelled}}
+          <td class="text-muted">Cancelled</td>
+          {{else if this.Products.Delivered}}
+          <td></td>
+          {{else}}
+          <td><button class="btn btn-outline-danger"
+              onclick="cancelOrder('{{this._id}}','{{this.Products.Product_id}}','{{this.Products.totalPrice}}','{{this.Total}}')">Cancel</button></td>
+          {{/if}}
+
+
+
+
+        </tr>
+
+
+        {{/each}}
+
+      </tbody>
+    </table>
+
+
+
+
+
+    {{!--
+  </div>
+</div> --}}
+
+<script>
+   function cancelOrder(orderId,productId,productPrize,TotalPrice) {
+   swal({
+  title: "Are you sure?",
+  text: "Once Removed, you will not be able to get this product!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+  timer:15000
+})
+.then((willDelete) => {
+  if (willDelete) {
+
+      $.ajax({
+            url: '/remove-order-product',
+            data: {orderId:orderId, productId:productId ,productPrize:productPrize,TotalPrice:TotalPrice},
+            method: 'post',
+            success: (response) => {
+                if (response) {
+                    location.reload()
+                }
+            }
+        })
+
+  } else {
+    swal("Your product is safe!");
+  }
+});
+   }
+</script>
+
+
+     <script>
+       $(document).ready( function () {
+  
+  
+          $('#ordertable').wrap('<div id="hide" style="display:none"/>');
+   
+         $('#hide').css( 'display', 'block' );
+     } );
+      
+
+         var table = $('#ordertable').DataTable();
+       </script>

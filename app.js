@@ -50,13 +50,14 @@ app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+  // console.log(req.body);
   // next(createError(404));
   res.render('user/404')
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  // console.log("bsfdasfas",err);
+  console.log("bsfdasfas",err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

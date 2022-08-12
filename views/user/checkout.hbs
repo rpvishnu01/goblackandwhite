@@ -17,10 +17,10 @@
 <section class="checkout spad">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            {{!-- <div class="col-lg-12">
                 <h6 class="coupon__link"><span class="icon_tag_alt"></span> <a href="#">Have a coupon?</a> Click
                     here to enter your code.</h6>
-            </div>
+            </div> --}}
         </div>
 
 
@@ -101,6 +101,18 @@
                                 <input type="text" name="Mob" id="mobInput" required>
                             </div>
                         </div>
+
+
+
+
+                         <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Phone <span>*</span></p>
+                                <input type="text" name="discount" id="discount" value="{{CartItems.[0].discoundedAmt}}" hidden required>
+                            </div>
+                        </div>
+
+                        
 
                         <input type="text" name="netTotal" id="" value="{{CartItems.[0].NetTotal}}" hidden>
 

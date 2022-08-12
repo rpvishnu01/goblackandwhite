@@ -33,7 +33,9 @@ router.get('/otp-verifier', userController.getOtp)
 
 router.post('/otp-verifier', userController.postOtpVerifier)
 
-router.get('/add-to-cart/:id', userController.getAddtocart)
+
+
+router.get('/add-to-cart/:id',verifyLogin, userController.getAddtocart)
 
 router.get('/cart', verifyLogin, userController.getCart)
 
@@ -65,7 +67,7 @@ router.get('/order-placed', verifyLogin, userController.getPlacedOrder)
 
 router.get('/order-details', verifyLogin, userController.getOrderDetails)
 
-// router.get('/view-order-product/:id', verifyLogin, userController.getOrderProduct)
+router.get('/view-order-product/:id', verifyLogin, userController.getOrderProduct)
 
 router.post('/remove-order-product', verifyLogin, userController.postRemoveOrder)
 
@@ -73,11 +75,20 @@ router.post('/verify-payment', verifyLogin, userController.postVerifyPayment)
 
 router.get('/account', verifyLogin, userController.getAccount)
 
+router.get('/add-new-address',verifyLogin,userController.getAddNewAddress)
+
 router.post('/add-address', verifyLogin, userController.postAddress)
 
 router.post('/apply-coupon', verifyLogin, userController.postApplayCoupon)
 
 router.get('/track-order', verifyLogin, userController.getTrackOrder)
+
+router.get('/all-order-invoice', verifyLogin, userController.getOrderInvoice)
+
+router.get('/edit-profile',verifyLogin,userController.getEditProfile)
+
+router.post('/edit-profile',verifyLogin,userController.postEditProfile)
+
 
 router.get('/chat', verifyLogin, userController.getChat)
 

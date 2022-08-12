@@ -1,17 +1,58 @@
 <div class="con">
- <div class="login-page"> 
-  <div class="form">
-        <h3>OTP Verification</h3>
-        
-    <form class="login-form" action="/otp-verifier" method="post">
-      <input type="otp" name="Otp" placeholder="Enter Your OTP"/>
-    
-      <button>submit</button>
-      {{#if otpErr}}
-      <p class="error text-danger mt-2" >{{ otpErr}}</p>
-      {{/if}}
-    </form>
+  <div class="login-page">
+    <div class="form">
+      <h3>OTP Verification</h3>
+
+      <form class="login-form" action="/otp-verifier" method="post">
+        <input type="otp" name="Otp" id="Otp" placeholder="Enter Your OTP"  required/>
+          <input type="otp" name="timeOut" id="timeOut" placeholder="Enter Your OTP" hidden />
+        {{!-- <div>Time left  <span id="timer"></span></div> --}}
+        <button>submit</button>
+        {{#if otpErr}}
+        <p class="error text-danger mt-2">Invald otp</p>
+        {{/if}}
+      </form>
+    </div>
   </div>
 </div>
-</div>
+
+
+
+{{!-- 
+
+<script>
+
+  let timerOn = true;
+
+  function timer(remaining) {
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    document.getElementById('timer').innerHTML = m + ':' + s;
+    remaining -= 1;
+
+    if (remaining >= 0 && timerOn) {
+      setTimeout(function () {
+        timer(remaining);
+      }, 1000);
+      return;
+    }
+
+    if (!timerOn) {
+      // Do validate stuff here
+      return;
+    }
+            document.getElementById("timer").innerHTML= " please sign in again "
+
+       document.getElementById("timeOut").innerHTML= true
+    // Do timeout stuff here
+ 
+
+  }
+  timer(30);
+</script> --}}
+
+
 

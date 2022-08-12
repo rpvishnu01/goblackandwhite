@@ -6,6 +6,7 @@ const Schema = mongoose.Schema
 const OrderSchema = new Schema({
     UserId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     Total: { type: Number },
+    discoundedAmt:Number,
     // Status: {
     //     Pending:{type:Boolean},
     //     Placed:{type:Boolean},

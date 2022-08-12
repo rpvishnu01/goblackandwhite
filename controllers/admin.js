@@ -106,14 +106,14 @@ module.exports = {
         res.render("admin/category", { categories, layout: "admin-layout" })
 
     },
-    postCategory:async (req, res) => {
+    postCategory: async (req, res) => {
         const Name = req.body.Name
         if (req.body.Id) {
-            console.log("with id");
+   
             const Id = req.body.Id
             const response = await adminHelpers.editCategory(Id, Name)
         } else {
-            console.log("without id");
+       
             const response = await adminHelpers.addCategory(Name)
 
         }
@@ -129,23 +129,33 @@ module.exports = {
         const orders = await adminHelpers.orderDetails()
         res.render('admin/order', { orders, layout: "admin-layout" })
     },
+    getOrderedProducts: async (req, res) => {
+    
+        const orderId=req.params.id
+        const orderedProducts = await adminHelpers.orderedProducts(orderId)
+
+        console.log(orderedProducts);
+    
+        res.render('admin/ordered-products', { orderedProducts, layout: "admin-layout" })
+
+    },
     postCancelOrder: async (req, res) => {
 
-        console.log(req.body);
+  
 
         const responce = await adminHelpers.CancelOrder(req.body)
         res.json({ success: true })
     },
     postCompleteOrder: async (req, res) => {
 
-        console.log(req.body);
+      
 
         const responce = await adminHelpers.CompleteOrder(req.body)
         res.json({ success: true })
     },
     postShipOrder: async (req, res) => {
 
-        console.log(req.body);
+
 
         const responce = await adminHelpers.ShipOrder(req.body)
         res.json({ success: true })

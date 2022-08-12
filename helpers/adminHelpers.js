@@ -57,7 +57,7 @@ module.exports = {
 
     return new Promise(async (resolve, reject) => {
       const product = await productDb.find({}).lean()
-      console.log(product)
+   
       resolve(product)
 
     }
@@ -133,12 +133,10 @@ module.exports = {
   },
   filteredProduct: (categoryid) => {
     //  const id= parseInt(categoryid)
-    console.log(categoryid)
+
     return new Promise(async (resolve, reject) => {
       const productList = await productDb.find({ CategoryId: categoryid }).lean()
-      console.log("......");
-      console.log(productList)
-      console.log("......");
+  
       resolve(productList)
 
     })
@@ -478,13 +476,13 @@ module.exports = {
         { $inc: { "Stock": -1 } }
       )
 
-      console.log(product);
+  
 
     })
   },
   changeStock: (data) => {
     data.count *= -1
-    console.log(data.count)
+  
     return new Promise(async (resolve, reject) => {
 
 
@@ -507,7 +505,75 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       // const orders = await orderDb.find({ UserId: mongoose.Types.ObjectId(userId) }).populate('Products.Product_id').lean()
 
+      // let orders = await orderDb.aggregate([
+
+      //   {
+      //     $unwind: "$Products",
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "products",
+      //       localField: "Products.Product_id",
+      //       foreignField: "_id",
+      //       as: "result",
+      //     },
+      //   },
+      //   {
+      //     $unwind: "$result",
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "UserId",
+      //       foreignField: "_id",
+      //       as: "userdata",
+      //     },
+      //   },
+      //   {
+      //     $unwind: "$userdata",
+      //   },
+      //   // {
+      //   //   $unwind:"$result.Images"
+      //   // },
+
+
+      //   {
+      //     $project: {
+      //       totalPrice: 1,
+      //       date: 1,
+      //       Products: 1,
+      //       result: 1,
+      //       DeliveryDetails: 1,
+      //       Total: 1,
+      //       userdata: 1
+      //     },
+      //   },
+      //   {
+      //     $sort: {
+      //       date: -1,
+      //     },
+      //   },
+      // ]).exec();
+
       let orders = await orderDb.aggregate([
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+      ]).exec();
+  
+      resolve(orders)
+
+    })
+  },
+  orderedProducts: ( orderId) => {
+
+    return new Promise(async (resolve, reject) => {
+      let orders = await orderDb.aggregate([
+        {
+          $match: {  _id: mongoose.Types.ObjectId(orderId) },
+        },
 
         {
           $unwind: "$Products",
@@ -556,12 +622,13 @@ module.exports = {
           },
         },
       ]).exec();
-      console.log("pppppppppppp");
-      console.log(orders);
-      console.log("pppppppppppp");
+ 
       resolve(orders)
 
     })
+
+
+
   },
 
   CancelOrder: (data) => {
@@ -584,7 +651,7 @@ module.exports = {
 
       )
 
-      console.log(responce);
+   
       resolve(responce)
     })
   },
@@ -608,7 +675,7 @@ module.exports = {
 
       )
 
-      console.log(responce);
+
       resolve(responce)
     })
   },
@@ -632,7 +699,7 @@ module.exports = {
 
       )
 
-      console.log(responce);
+
       resolve(responce)
     })
   },
@@ -679,7 +746,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let userCount = await userDb.count({})
-        console.log(userCount)
+  
         resolve(userCount);
       } catch (error) {
         console.log(error);
@@ -711,7 +778,7 @@ module.exports = {
         ]).exec()
 
 
-        console.log(revenue);
+    
 
         if (revenue[0]) {
           resolve(revenue[0])
@@ -732,8 +799,8 @@ module.exports = {
       try {
 
         let totalSale = await orderDb.count({})
-        console.log('heyyy')
-        console.log(totalSale)
+    
+    
         resolve(totalSale)
       } catch (error) {
         console.log(error);
@@ -769,7 +836,7 @@ module.exports = {
         ]).exec()
         let onlineLen = Online.length
         paymentMethod.push(onlineLen)
-        console.log(paymentMethod);
+    
         resolve(paymentMethod)
 
       } catch (error) {
@@ -797,7 +864,7 @@ module.exports = {
 
         statusData.push(placedCount)
 
-        console.log(statusData)
+    
 
         let shipped = await orderDb.aggregate([
           {

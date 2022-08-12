@@ -1,0 +1,62 @@
+<div class="container rounded bg-white mt-2 mb-2 ">
+
+
+    <div class="col-md-5 border-right">
+        <div class="p-3 py-5 ">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="text-right">Edit Profile</h4>
+            </div>
+
+
+            <form action="" method="post" id="edit-profile">
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">First Name</label>
+                        <input type="text" class="form-control" placeholder="enter First Name"
+                            value=" {{user.FirstName}}" name="FirstName" id="firstNameInput" required>
+                    </div>
+                    <div class="col-md-6"><label class="labels">Last Name</label>
+                        <input type="text" class="form-control" value="{{user.LastName}}" placeholder="enter Last Name"
+                            name="LastName" id="lastNameInput" required>
+                    </div>
+                </div>
+
+
+
+                <div class="row mt-3">
+
+
+                    <div class="col-md-12"><label class="labels">Mob</label><input type="text" class="form-control"
+                            placeholder="enter Mob" value="{{user.MobNo}}" name="Mob" id="mobInput" required></div>
+
+                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control"
+                            placeholder="enter email id" value="{{user.Email}}" name="Email" id="emailInput" required>
+                    </div>
+
+                </div>
+
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button"
+                        type="submit">Update</button></div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+       $("#edit-profile").submit(() => {
+
+        $.ajax({
+            url: '/edit-profile',
+            method: 'post',
+            data: $('#edit-profile').serialize(),
+            success: (response) => {
+           
+                location.reload()
+
+            }
+        })
+    });
+</script>
+
+

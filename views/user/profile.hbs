@@ -12,174 +12,151 @@
 </div>
 
 
-
-
-<div class="container rounded bg-white mt-5 mb-5">
-    <div class="row">
-        <div class="col-md-3 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
-                    width="150px"
-                    src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span
-                    class="font-weight-bold">{{user.FirstName}} {{user.LastName}}</span><span class="text-black-50">
-                    {{user.Email}}</span><span></span></div>
-
-
-            <div class="profileC">
-                <ul class="profile">
-
-
-
-                    <li><a href="/order-details">orders</a> </li>
-                    {{!-- <li><a href="/chat">chat</a> </li> --}}
-                </ul>
-            </div>
-
-
-
-
-        </div>
-
-
-
-
-
-
-
-
-
-
-        <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Add Address</h4>
-                </div>
-
-
-
-
-
-
-
-
-
-
-                <form action="" method="post" id="add_address">
-                    <div class="row mt-2">
-                        <div class="col-md-6"><label class="labels">First Name</label>
-                            <input type="text" class="form-control" placeholder="enter First Name" value=""
-                                name="FirstName" id="firstNameInput" required>
+<section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card">
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                style="width: 150px; z-index: 1">
+                            <a href="/edit-profile" class="btn btn-dark" data-mdb-ripple-color="dark"
+                                style="z-index: 1;">
+                                Edit profile
+                            </a>
                         </div>
-                        <div class="col-md-6"><label class="labels">Last Name</label>
-                            <input type="text" class="form-control" value="" placeholder="enter Last Name"
-                                name="LastName" id="lastNameInput" required>
+                        <div class="ms-3" style="margin-top: 130px;">
+                            <h5>{{user.FirstName}} {{user.LastName}} </h5>
+
+                            <p>{{user.Email}}</p>
                         </div>
                     </div>
-
-
-
-                    <div class="row mt-3">
-                        <div class="col-md-12"><label class="labels">Address</label><input type="text"
-                                class="form-control" placeholder="enter Address" value="" name="Address"
-                                id="addressInput" required></div>
-
-
-
-                        <div class="col-md-12"><label class="labels">Town</label><input type="text" class="form-control"
-                                placeholder="enter Town" value="" name="Town" id="townInput" required></div>
-
-
-
-                        <div class="col-md-12"><label class="labels">State</label><input type="text"
-                                class="form-control" placeholder="enter State" value="" name="State" id="stateInput"
-                                required></div>
-
-
-                        <div class="col-md-12"><label class="labels">Postcode</label><input type="text"
-                                class="form-control" placeholder="enter PostCode" value="" name="Pin" id="pinInput"
-                                required></div>
-
-
-
-                        <div class="col-md-12"><label class="labels">Mob</label><input type="text" class="form-control"
-                                placeholder="enter Mob" value="" name="Mob" id="mobInput" required></div>
-
-
-
-
-
-
-                        <div class="col-md-12"><label class="labels">Email ID</label><input type="text"
-                                class="form-control" placeholder="enter email id" value="" name="Email" id="emailInput"
-                                required></div>
-                        <input type="text" class="form-control" value="" name="addressId" id="hidden" hidden>
-
-
-
+                    <div class="p-5  text-black" style="background-color: #f8f9fa;">
 
                     </div>
-
-                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Save
-                            Profile</button></div>
-
-                </form>
-            </div>
-
-
-
-
-        </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Address Settings</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+                                {{!-- <p class="font-italic mb-1">Web Developer</p>
+                                <p class="font-italic mb-1">Lives in New York</p>
+                                <p class="font-italic mb-0">Photographer</p> --}}
 
 
 
 
-        <div class="col-md-4">
-            <div class="p-3 py-5">
-                {{!-- <div class="d-flex justify-content-between align-items-center experience"><span>Edit
-                        Experience</span><span class="border px-3 p-1 add-experience"><i
-                            class="fa fa-plus"></i>&nbsp;Experience</span></div><br> --}}
 
 
+                                {{#each address.AddressList}}
+                                <h6 class="address__link"> {{this.FirstName}} {{this.LastName}}, {{this.Address}},
+                                    {{this.Town}},
+                                    {{this.State}}, {{this.Pin}}, {{this.Mob}}, {{this.Email}}
+                                </h6>
+                                {{/each}}
 
-                <div class="col-md-12">
+                                <div class="ms-4 mt-5 d-flex flex-column  mx-auto">
 
+                                    <a href="/add-new-address" class="btn btn-dark" data-mdb-ripple-color="dark"
+                                        style="z-index: 1;">
+                                        Address Settings
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
 
-                    <label class="labels">previously Added Address</label>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Addresses</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each address.AddressList}}
-                            <tr>
-                                <td>
-                                    <p>{{this.FirstName}} {{this.LastName}}, {{this.Address}}, {{this.Town}},
-                                        {{this.State}}, {{this.Pin}}, {{this.Mob}}, {{this.Email}} </p>
-                                </td>
-                                <td>
-                                    <button class="btn btn-outline-success"
-                                        onclick="updateAddress('{{this.FirstName}}', '{{this.LastName}}', '{{this.Address}}','{{this.Town}}','{{this.State}}','{{this.Pin}}','{{this.Mob}}','{{this.Email}}','{{this._id}}')">Update</button>
+                            </div>
+                        </div>
 
 
-                                </td>
-                            </tr>
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Orders</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+
+                                <div class="ms-4 mt-5 d-flex flex-column  mx-auto">
+
+                                    <a href="/order-details" class="btn btn-dark" data-mdb-ripple-color="dark"
+                                        style="z-index: 1;">
+                                        view Orders
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <p class="lead fw-normal mb-0">Liked</p>
+                            <p class="mb-0"><a href="#!" class="text-muted">Show all</a></p>
+                        </div>
+                        <div class="row g-2">
+                            {{#each wishlistItems.WishlistItems}}
+                            <div class="col mb-2">
+                                <img src="/product-images/{{Product_id.Images.[0].filename}}" alt="image 1"
+                                    class="w-100 rounded-3">
+                                <div class="bw__controls">
+                                    <button onclick="addToCart('{{
+                                         Product_id._id}}')" class="btn_one mb-2"> ADD TO
+                                        CART</button>
+
+                                </div>
+                            </div>
                             {{/each}}
-                        </tbody>
-                    </table>
-                </div> <br>
+                        </div>
+
+                    </div>
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+{{!--
 <script>
     $("#add_address").submit(() => {
 
@@ -209,4 +186,4 @@
         document.getElementById("hidden").value = addId
 
     }
-</script>
+</script> --}}

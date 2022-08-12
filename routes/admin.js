@@ -50,6 +50,8 @@ router.get('/deleteCategory/:id',verifyLoginAdmin, adminController.getDeleteCate
 
 router.get('/get-orders',verifyLoginAdmin, adminController.getOrders)
 
+router.get('/ordered-product/:id',verifyLoginAdmin, adminController.getOrderedProducts)
+
 router.post('/cancelOrder', adminController.postCancelOrder)
 
 router.post('/CompleteOrder', adminController.postCompleteOrder)

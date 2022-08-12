@@ -1,3 +1,5 @@
+
+
 <div class="content-body">
     <div class="container-fluid">
         <div class="row page-titles mx-0">
@@ -7,7 +9,7 @@
                 <div class="welcome-text">
                     <h4>All Users</h4>
                 </div>
-
+               
             </div>
         </div>
         <!-- row -->
@@ -23,21 +25,31 @@
                             <table class="table">
                                 <thead class="thead-primary">
                                     <tr>
-
-
+                                        <th scope="col">product</th>
+                                        <th scope="col">User</th>
                                         <th scope="col">Address</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Prize</th>
+                                        <th scope="col">Quantity</th>
+
+                                        <th scope="col">Status</th>
+
                                         <th scope="col">Action</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each orders}}
+                                    {{#each orderedProducts}}
                                     <tr>
+                                        <td>
+                                            <a href="/view-product/:{{this.result._id}}"><img
+                                                    src="/product-images/{{this.result.Images.[0].filename}}" alt=""
+                                                    style="width:80px ;height:80px"></a>
+                                            <h6>{{this.result.ProductName}}</h6>
 
+                                        </td>
 
-
+                                        <td class="cart__price">{{this.userdata.FirstName}}</td>
                                         <td>
                                             <p>{{this.DeliveryDetails.FirstName}} {{this.DeliveryDetails.LastName}}
                                                 ,{{this.DeliveryDetails.Address}},{{this.DeliveryDetails.Town}},{{this.DeliveryDetails.State}},
@@ -48,8 +60,60 @@
                                         <td>
                                             <p> {{this.date}}</p>
                                         </td>
-                                        <td class="cart__price">{{this.Total}}</td>
-                                        <td><a href="/admin/ordered-product/{{this._id}}" class="btn btn-success"> view Products</a></td>
+                                        <td class="cart__price">{{this.Products.totalPrice}}</td>
+                                        <td class="cart__price">{{this.Products.Quantity}}</td>
+
+                                        <td class="cart__price">{{this.Products.status}}</td>
+                                        <td>
+                                            {{#if this.Products.Cancelled}}
+
+                                            <p class="text-muted">cancelled</p>
+                                            {{else if this.Products.Delivered}}
+                                            <p class="text-muted">Delivered</p>
+                                            {{else if this.Products.Shipped}}
+
+
+
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    Status
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                                    <li><a class="dropdown-item"
+                                                            onclick="CompleteOrder('{{this._id}}','{{this.Products.Product_id}}')">Compleate</a>
+                                                    </li>
+                                                    <li><a class="dropdown-item"
+                                                            onclick="cancelOrder('{{this._id}}','{{this.Products.Product_id}}')">Cancel</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                            {{else}}
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    Status
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                    <li><a class="dropdown-item"
+                                                            onclick="ShipOrder('{{this._id}}','{{this.Products.Product_id}}')">Ship</a>
+                                                    </li>
+                                                    {{!-- <li><a class="dropdown-item"
+                                                            onclick="CompleteOrder('{{this._id}}','{{this.Products.Product_id}}')">Compleate</a>
+                                                    </li> --}}
+                                                    <li><a class="dropdown-item"
+                                                            onclick="cancelOrder('{{this._id}}','{{this.Products.Product_id}}')">Cancel</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+
+                                            {{/if}}
+                                        </td>
 
                                     </tr>
                                     {{/each}}
@@ -95,7 +159,7 @@
 
 
 
-            function CompleteOrder(orderId, productId) {
+                 function CompleteOrder(orderId, productId) {
                 swal({
                     title: "Are you sure?",
                     text: "Once Removed, you will not be able to get this product!",
@@ -127,7 +191,7 @@
 
 
 
-            function ShipOrder(orderId, productId) {
+                 function ShipOrder(orderId, productId) {
                 swal({
                     title: "Are you sure?",
                     text: "Once Removed, you will not be able to get this product!",
