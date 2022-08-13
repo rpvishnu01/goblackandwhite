@@ -10,6 +10,7 @@ const { aggregate } = require('../models/Admin')
 const orderDb = require('../models/Order')
 const couponDb = require('../models/Coupon')
 const userDb = require('../models/User')
+const { ActivityInstance } = require('twilio/lib/rest/taskrouter/v1/workspace/activity')
 
 module.exports = {
   doLogin: (adminData) => {
@@ -57,7 +58,7 @@ module.exports = {
 
     return new Promise(async (resolve, reject) => {
       const product = await productDb.find({}).lean()
-   
+
       resolve(product)
 
     }
@@ -136,7 +137,7 @@ module.exports = {
 
     return new Promise(async (resolve, reject) => {
       const productList = await productDb.find({ CategoryId: categoryid }).lean()
-  
+
       resolve(productList)
 
     })
@@ -476,13 +477,13 @@ module.exports = {
         { $inc: { "Stock": -1 } }
       )
 
-  
+
 
     })
   },
   changeStock: (data) => {
     data.count *= -1
-  
+
     return new Promise(async (resolve, reject) => {
 
 
@@ -562,17 +563,17 @@ module.exports = {
           },
         },
       ]).exec();
-  
+
       resolve(orders)
 
     })
   },
-  orderedProducts: ( orderId) => {
+  orderedProducts: (orderId) => {
 
     return new Promise(async (resolve, reject) => {
       let orders = await orderDb.aggregate([
         {
-          $match: {  _id: mongoose.Types.ObjectId(orderId) },
+          $match: { _id: mongoose.Types.ObjectId(orderId) },
         },
 
         {
@@ -622,7 +623,7 @@ module.exports = {
           },
         },
       ]).exec();
- 
+
       resolve(orders)
 
     })
@@ -651,7 +652,7 @@ module.exports = {
 
       )
 
-   
+
       resolve(responce)
     })
   },
@@ -746,7 +747,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let userCount = await userDb.count({})
-  
+
         resolve(userCount);
       } catch (error) {
         console.log(error);
@@ -778,7 +779,7 @@ module.exports = {
         ]).exec()
 
 
-    
+
 
         if (revenue[0]) {
           resolve(revenue[0])
@@ -799,8 +800,8 @@ module.exports = {
       try {
 
         let totalSale = await orderDb.count({})
-    
-    
+
+
         resolve(totalSale)
       } catch (error) {
         console.log(error);
@@ -836,7 +837,7 @@ module.exports = {
         ]).exec()
         let onlineLen = Online.length
         paymentMethod.push(onlineLen)
-    
+
         resolve(paymentMethod)
 
       } catch (error) {
@@ -845,7 +846,70 @@ module.exports = {
     })
 
 
+  }, topSaled: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const topsaleProd = await orderDb.aggregate([
+          {
+            "$unwind": "$Products"
+          },
+          {
+            $project: {
+              item: '$Products.Product_id',
+              Qnt: '$Products.Quantity',
+            }
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "item",
+              foreignField: "_id",
+              as: "result",
+            }
+          },
+          {
+                  $unwind:"$result"
+          },
+          {
+            "$group": {
+              _id: "$result.ProductName",
+              sum: {
+                "$sum": "$Qnt"
+              }
+            }
+          },
+           {
+            $limit:3
+           },
+        ]).exec()
+
+    console.log("wwwwwwwwwwwwwwwww")
+    console.log(topsaleProd);
+    console.log("wwwwwwwwwwwwwwwww")
+           resolve(topsaleProd)
+
+      } catch (err) {
+        console.log(err);
+        reject(err)
+
+      }
+    })
+
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   getStatusData: () => {
     let statusData = []
     return new Promise(async (resolve, reject) => {
@@ -864,7 +928,7 @@ module.exports = {
 
         statusData.push(placedCount)
 
-    
+
 
         let shipped = await orderDb.aggregate([
           {

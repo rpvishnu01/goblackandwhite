@@ -25,8 +25,30 @@ module.exports = {
             let totalSale = await adminHelpers.getTotalSale()
             let paymentData = await adminHelpers.getPaymentData()
             let statusData = await adminHelpers.getStatusData()
+            let topSaled = await adminHelpers.topSaled()
 
-            res.render('admin/ad-index', { loginpage: false, layout: "admin-layout", productsCount, usersCount, totalSale, revenue, paymentData, statusData });
+            let qnt = []
+
+
+
+            let id = []
+           
+            topSaled.forEach((element) => {
+                qnt.push(element.sum)
+                console.log(element.sum)
+            })
+
+            topSaled.forEach((element) => {
+                id.push(element._id)
+                console.log(element.sum)
+            })
+            console.log("pppp");
+            console.log(qnt);
+            console.log(id);
+
+            console.log("pppp");
+
+            res.render('admin/ad-index', { loginpage: false, layout: "admin-layout", productsCount, usersCount, totalSale, revenue, paymentData, statusData, qnt, id });
         }
         else {
             res.redirect('/admin')
@@ -109,11 +131,11 @@ module.exports = {
     postCategory: async (req, res) => {
         const Name = req.body.Name
         if (req.body.Id) {
-   
+
             const Id = req.body.Id
             const response = await adminHelpers.editCategory(Id, Name)
         } else {
-       
+
             const response = await adminHelpers.addCategory(Name)
 
         }
@@ -130,25 +152,25 @@ module.exports = {
         res.render('admin/order', { orders, layout: "admin-layout" })
     },
     getOrderedProducts: async (req, res) => {
-    
-        const orderId=req.params.id
+
+        const orderId = req.params.id
         const orderedProducts = await adminHelpers.orderedProducts(orderId)
 
         console.log(orderedProducts);
-    
+
         res.render('admin/ordered-products', { orderedProducts, layout: "admin-layout" })
 
     },
     postCancelOrder: async (req, res) => {
 
-  
+
 
         const responce = await adminHelpers.CancelOrder(req.body)
         res.json({ success: true })
     },
     postCompleteOrder: async (req, res) => {
 
-      
+
 
         const responce = await adminHelpers.CompleteOrder(req.body)
         res.json({ success: true })

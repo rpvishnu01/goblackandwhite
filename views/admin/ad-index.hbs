@@ -102,6 +102,38 @@
         </div>
 
 
+
+
+
+
+
+
+
+        
+
+        <div class="row">
+
+
+            <div class="col-xl-8 col-lg-8 col-md-8">
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Sales Overview</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-8">
+                                <canvas id="myChart3" style="width:100%;max-width:600px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
         {{!-- baaaar --}}
         <div class="row">
             <div class="col-xl-8 col-lg-8 col-md-8">
@@ -189,8 +221,46 @@
 
 
 
+
+
+
+
+
 <script>
-    var xValues = ["Cash on  Delivery", "Online Payment", ];
+    var xValues = ["{{ id.[0] }}","{{ id.[1] }}","{{ id.[2] }}" ];
+    var yValues = [{{qnt}}];
+    var barColors = ["red", "green"];
+
+    new Chart("myChart3", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: "Top Saled"
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+<script>
+    var xValues = ["Cash on  Delivery", "RAZORPAY", ];
     var yValues = [{{paymentData}}];
     var barColors = [
         " #0000FF",
